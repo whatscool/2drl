@@ -58,37 +58,7 @@ function game ()
   });
 
 
-////////////////////////////////////////////////////////////////////////////////
-//     TEST
-////////////////////////////////////////////////////////////////////////////////
-/*
-var VIEW = {};
-VIEW.SAFE_WIDTH = 100;
-VIEW.SAFE_HEIGHT = 100;
-VIEW.scale = Math.min(window.innerWidth / VIEW.SAFE_WIDTH, window.innerHeight / VIEW.SAFE_HEIGHT);
-VIEW.width = window.innerWidth / VIEW.scale;
-VIEW.height = window.innerHeight / VIEW.scale;
-VIEW.centerX = VIEW.width / 2;
-VIEW.centerY = VIEW.height / 2;
-VIEW.offsetX = (VIEW.width - VIEW.SAFE_WIDTH) / 2 / VIEW.scale;
-VIEW.offsetY = (VIEW.height - VIEW.SAFE_HEIGHT) / 2 / VIEW.scale;
 
-var bodiesDom = document.querySelectorAll('.block');
-var bodies = [];
-for (var i = 0, l = bodiesDom.length; i < l; i++) {
-    var body = Bodies.rectangle(
-        VIEW.centerX,
-        20,
-        VIEW.width*bodiesDom[i].offsetWidth/window.innerWidth,
-        VIEW.height*bodiesDom[i].offsetHeight/window.innerHeight
-    );
-	bodiesDom[i].id = body.id;
-    bodies.push(body);
-}
-World.add(engine.world, bodies);
-
-
-*/
 ////////////////////////////////////////////////////////////////////////////////
 //     BALL
 ////////////////////////////////////////////////////////////////////////////////
@@ -210,23 +180,11 @@ var wallSize = 50;
       mass: 100,
       isStatic: true,
       //frictionStatic: 0.5,
-      restitution: -1,
+      restitution: -1
       //sleepThreshold: Infinity,
       //collisionFilter: {group: -2},
     });
 
-
-    /*
-    console.log("window height: " + window.innerHeight);
-    console.log("window width: " + window.innerWidth);
-
-
-    console.log("window width/7: " + window.innerWidth/7);
-    console.log("6*window width/7: " + 6*window.innerWidth/7);
-    */
-
-    console.log("left goal Pos: " + leftGoal.position.x);
-    console.log("right goal Pos: " + rightGoal.position.x);
 
 
 
@@ -252,6 +210,10 @@ var carStartPoint = [200, 350],
       {x : carStartPoint[0] ,           y : carStartPoint[0]+carHeight}
     ];
 
+const car = Matter.Bodies.fromVertices(carStartPoint[0], carStartPoint[1], carVertices);
+const refBL = Matter.Bodies.circle(car.position.x - carWidth/2, car.position.y + carHeight/2, 0.01);
+const refTL = Matter.Bodies.circle(car.position.x - carWidth/2, car.position.y - carHeight/2, 0.01);
+/*
 const carBody = Matter.Bodies.fromVertices(carStartPoint[0], carStartPoint[1], carVertices);
 const frontWheel = Matter.Bodies.circle(carBody.position.x - carWidth/3, carBody.position.y +(3*carHeight/4), wheelRadius);
 const rearWheel = Matter.Bodies.circle(carBody.position.x + carWidth/3, carBody.position.y +(3*carHeight/4), wheelRadius);
@@ -268,7 +230,7 @@ const car = Body.create
   //sleepThreshold: Infinity,
   //collisionFilter: {group: -2},
 });
-
+*/
 
 
 //**********************************************************************************
@@ -276,26 +238,16 @@ const car = Body.create
 
 var carWidth2 = 60,
     carHeight2 = 20;
-const carBody2 = Matter.Bodies.fromVertices(1050, 350, [{x:200, y:200},{x:140, y:210},{x:140, y:220},{x: 200, y: 220}],
-  {
-    render: {sprite: {texture: "assets/graphics/transparent.png", xScale: 0.09, yScale: 0.09}}
-  });
-  const frontWheel2 = Matter.Bodies.circle(carBody2.position.x -20, carBody2.position.y +15, 8,
-  {
-    render: {sprite: {texture: "assets/graphics/transparent.png", xScale: 0.09, yScale: 0.09}}
-  });
-  const rearWheel2 = Matter.Bodies.circle(carBody2.position.x +20, carBody2.position.y +15, 8,
-  {
-    render: {sprite: {texture: "assets/graphics/transparent.png", xScale: 0.09, yScale: 0.09}}
-  });
-const refBR = Matter.Bodies.circle(carBody2.position.x + carWidth2/2, carBody2.position.y + carHeight2/2, 0.01,
-{
-  render: {sprite: {texture: "assets/graphics/transparent.png", xScale: 0.09, yScale: 0.09}}
-});
-const refTR = Matter.Bodies.circle(carBody2.position.x + carWidth2/2, carBody2.position.y - carHeight2/2, 0.01,
-{
-  render: {sprite: {texture: "assets/graphics/transparent.png", xScale: 0.09, yScale: 0.09}}
-});
+
+const car2 = Matter.Bodies.fromVertices(1050, 350, [{x:200, y:200},{x:140, y:210},{x:140, y:220},{x: 200, y: 220}])
+const refBR = Matter.Bodies.circle(car2.position.x + carWidth2/2, car2.position.y + carHeight2/2, 0.01)
+const refTR = Matter.Bodies.circle(car2.position.x + carWidth2/2, car2.position.y - carHeight2/2, 0.01)
+/*
+const carBody2 = Matter.Bodies.fromVertices(1050, 350, [{x:200, y:200},{x:140, y:210},{x:140, y:220},{x: 200, y: 220}])
+const frontWheel2 = Matter.Bodies.circle(carBody2.position.x -20, carBody2.position.y +15, 8)
+const rearWheel2 = Matter.Bodies.circle(carBody2.position.x +20, carBody2.position.y +15, 8)
+const refBR = Matter.Bodies.circle(carBody2.position.x + carWidth2/2, carBody2.position.y + carHeight2/2, 0.01)
+const refTR = Matter.Bodies.circle(carBody2.position.x + carWidth2/2, carBody2.position.y - carHeight2/2, 0.01)
 const car2 = Body.create
 ({
   parts: [carBody2, frontWheel2, rearWheel2, refBR, refTR],
@@ -307,6 +259,7 @@ const car2 = Body.create
   //sleepThreshold: Infinity,
   //collisionFilter: {group: -2},
 });
+*/
 
 
 
@@ -432,7 +385,10 @@ function controls()
       let rotationalForce = 0.003;
       Body.applyForce(car,
         { x: (car.position.x - carWidth/2), y: (car.position.y) },
-        { x:0, y:carAirRotationalForce } );
+        { x:0, y:carAirRotationalForce/2 } );
+      Body.applyForce(car,
+        { x: (car.position.x + carWidth/2), y: (car.position.y) },
+        { x:0, y:-carAirRotationalForce/2 } );
     }
 
 
@@ -453,7 +409,12 @@ function controls()
       let rotationalForce = 0.003;
       Body.applyForce(car,
         { x: (car.position.x - carWidth/2), y: (car.position.y) },
-        { x:0, y:-carAirRotationalForce } );
+        { x:0, y:-carAirRotationalForce/2 } );
+      Body.applyForce(car,
+        { x: (car.position.x + carWidth/2), y: (car.position.y) },
+        { x:0, y:carAirRotationalForce/2 } );
+
+
     }
 
 
@@ -525,7 +486,10 @@ function controls2()
     {
       Body.applyForce(car2,
         { x: (car2.position.x + carWidth2/2), y: (car2.position.y) },
-        { x:0, y:-carAirRotationalForce } );
+        { x:0, y:-carAirRotationalForce/2 } );
+      Body.applyForce(car2,
+        { x: (car2.position.x - carWidth2/2), y: (car2.position.y) },
+        { x:0, y:carAirRotationalForce/2 } );
     }
 
 
@@ -545,7 +509,10 @@ function controls2()
     {
       Body.applyForce(car2,
         { x: (car2.position.x - carWidth2/2), y: (car2.position.y) },
-        { x:0, y:-carAirRotationalForce } );
+        { x:0, y:-carAirRotationalForce/2 } );
+      Body.applyForce(car2,
+        { x: (car2.position.x + carWidth2/2), y: (car2.position.y) },
+        { x:0, y:carAirRotationalForce/2 } );
     }
 
 
@@ -570,7 +537,7 @@ function onGround()
 {
   //Rear: 471.9451171491292
   //Front: 471.8888231332251
-  if(frontWheel.position.y > (548 - wallSize/2 - wheelRadius - groundClearance) && rearWheel.position.y > (548 - wallSize/2 - wheelRadius - groundClearance))
+  if(car.position.y > 500)
   {
     carAvailableJumps = 1;
     return true;
@@ -586,7 +553,7 @@ function onGround2()
 {
   //Rear: 471.9451171491292
   //Front: 471.8888231332251
-  if(frontWheel2.position.y > 465 && rearWheel2.position.y > 465)
+  if(car2.position.y >500)
   {
     carAvailableJumps2 = 1;
     return true;
@@ -620,155 +587,7 @@ function calculateAngle2()
 }
 
 
-function bricks()
-{
-  for(i=0; i<20; i++)
-  {
-    drawSprite("floor_1", 60, 60, "assets/graphics/bricks.png", 10 +(i*60), 480, 0);
-  }
-  drawSprite("floor_1", 30, 60, "assets/graphics/bricks.png", 10 +(20*60), 480, 0);
-}
 
-
-
-//////////////////////////////////////////////////////// AUDIO
-function playSounds(backgroundAudio, carAudio)
-{
-  backgroundAudio.play();
-  carAudio.play();
-
-  if(keys["75"] || keys["83"])
-  {
-    boostAudio.play();
-  }
-  else
-  {
-    boostAudio.pause();
-  }
-
-  if(onGround() || onGround2())
-  {
-    if(keys["65"] || keys["68"] || keys["74"] || keys["76"])
-    {
-      carAudio2.play();
-    }
-    else
-    {
-      carAudio2.pause();
-    }
-  }
-  else
-  {
-    carAudio2.pause();
-  }
-}
-
-
-///////////////////////////////////////// ANIMATIONS AND SPRITES
-currentFrame = 0;
-function playAnimations(posX, posY, srcX, srcY, centreOfRotX, centreOfRotY, sheetWidth, sheetHeight,
-                        columns, rows, rotation, name, source)
-{
-  console.log("playAnimations() STARTED");
-  name = new Image();
-  name.src = source;
-
-  var width = sheetWidth/columns,
-      height = sheetHeight/rows;
-
-  currentFrame = ++currentFrame % cols;
-  srcX = currentFrame * width;
-  srcY = 0;
-
-  context.translate(centreOfRotX, centreOfRotY);
-  context.rotate((rotation + 180) * Math.PI / 180);
-  //context.drawImage(name, srcX, srcY, width, height, posX, posY, width, height);
-  drawSprite(name, width, height, source, posX, posY, rotation, centreOfRotX, centreOfRotY);
-  context.rotate(-(rotation + 180) * Math.PI / 180);
-  context.translate(-centreOfRotX, -centreOfRotY);
-
-  //context.drawImage(boostImg, srcX, srcY, width, height, x, y, width, height);
-  //drawSprite(name, width, height, source, posX, posY, rotation)
-
-  console.log("playAnimations() FINISHED");
-}
-//setInterval(function(){ playAnimations
-//  (
-//    car.position.x - carWidth, car.position.y, 0, 0, 245, 112, 4, 1, carAngleDegrees+90, "booost", "boost.png"); }, 3
-//  );
-
-
-function drawSprite(name, width, height, source, posX, posY, rotation, centreOfRotX, centreOfRotY)
-{
-  name = new Image();
-  name.width = width;
-  name.height = height;
-  name.src = source;
-  //name.x = 0;
-  //name.y = 0;
-  name.onload = function()
-  {
-    if(rotation != 0)
-    {
-
-        context.translate(centreOfRotX, centreOfRotY);
-        context.rotate((rotation + 180) * Math.PI / 180);
-        context.drawImage(name, -name.width/2, -name.height/2, name.width, name.height);
-        context.rotate(-(rotation + 180) * Math.PI / 180);
-        context.translate(-centreOfRotX, -centreOfRotY);
-
-    }
-    else
-    {
-      context.drawImage(name, posX, posY, name.width, name.height);
-      //console.log("drawn");
-    }
-  }
-} // End of drawSprite()
-
-
-
-  // The postion of the frame
-  var x = 500;
-  var y = 300;
-
-  // Coordinates of top-left of sprite image
-  var srcX = 0;
-  var srcY = 0;
-
-  // Dimensions of sprite sheet
-  var sheetWidth = 245;
-  var sheetHeight = 112;
-
-  // Number or sprites in each column and row
-  var cols = 4;
-  var rows = 1;
-
-  // Dimensions of each sprite
-  var width = sheetWidth / cols;
-  var height = sheetHeight / rows;
-
-
-  var currentFrame = 0;
-  function updateFrame()
-  {
-    currentFrame = ++currentFrame % cols;
-    srcX = currentFrame * width;
-    srcY = 0;
-  }
-
-
-  function drawMovingImage()
-  {
-    currentFrame = ++currentFrame % cols;
-    srcX = currentFrame * width;
-    srcY = 0;
-    context.drawImage(boostImg, srcX, srcY, width, height, x, y, width, height);
-    //drawSprite(name, width, height, source, posX, posY, rotation)
-    //drawSprite("boost_image", 50, 100, boost.png, posX, posY, rotation)
-  }
-  //setInterval(function(){ drawMovingImage(); }, 3);
-  //clearInterval(i);
 
 
 
@@ -801,23 +620,11 @@ function drawSprite(name, width, height, source, posX, posY, rotation, centreOfR
   }
 
 
-  //var playerOneScore = 0;
-  //var playerTwoScore = 0;
-  //function updateScoreboard()
-  //{
-  //  document.getElementById("1").innerHTML = "   " + playerOneScore; // Undefined or null reference, no clue why
-  //  document.getElementById("2").innerHTML = "   " + playerTwoScore; // Undefined or null reference, no clue why
-  //}
 
 
   ////////////////////////////////////////////// MAIN lOOP
     function cycle()
   {
-    playSounds(backgroundAudio, carAudio);
-    //addSprites();
-
-    //drawSprite("carPic2", 100, 40, "boost.png", car.position.x, car.position.y, carAngleDegrees, car.position.x, car.position.y);
-
     /// Make the goal move up and down
     var py = 250 + 30 * Math.sin(engine.timing.timestamp * 0.002);
     Body.setVelocity(leftGoal, { x: 0, y: py - leftGoal.position.y });
@@ -827,26 +634,15 @@ function drawSprite(name, width, height, source, posX, posY, rotation, centreOfR
     Body.setVelocity(rightGoal, { x: 0, y: qy - rightGoal.position.y });
     Body.setPosition(rightGoal, { x: 100, y: qy });
 
-    //drawMovingImage();
-    //playAnimations();
-    //bricks();
     calculateAngle();
     calculateAngle2();
     controls();
     controls2();
-    //checkForGoal();
-    //updateScoreboard();
+
     requestAnimationFrame(cycle);
   }
   cycle();
 
-
-  function addSprites()
-  {
-    drawSprite("floor_1", 60, 60, "assets/graphics/bricks.png", 10, 480, 0);
-    drawSprite("carPic", 100, 40, "assets/graphics/race_car_forwards.png", car.position.x, car.position.y, carAngleDegrees, car.position.x, car.position.y);
-    drawSprite("carPic2", 100, 40, "assets/graphics/muscle_car_backwards.png", car2.position.x, car2.position.y, carAngleDegrees2, car2.position.x, car2.position.y);
-  }
 
 
   // run the engine
