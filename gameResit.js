@@ -67,12 +67,12 @@ function game ()
 
   var ball = Bodies.circle(window.innerWidth/2, window.innerHeight/2, 30,
     {
-      mass: 10,// Used to be 0.5
-      inertia: 0,
+      mass: 1,// Used to be 10
+      inertia: 10,
       restitution: 0.95,
-      friction: 0,
+      friction: 0.5,
       frictionAir: 0.02,
-      render: {sprite: {texture: "assets/graphics/football.png", xScale: 0.09, yScale: 0.09}}
+      //render: {sprite: {texture: "assets/graphics/football.png", xScale: 0.09, yScale: 0.09}}
     });
 
 
@@ -201,8 +201,8 @@ var wallSize = 50;
 ////////////////////////////////////////////////////////////////////////////////
 
 var carStartPoint = [200, 350],
-    carWidth = 30,
-    carHeight = carWidth/3,
+    carWidth = 40,
+    carHeight = carWidth, // Used to be carWidth/3
     wheelRadius = carHeight/2,
     carVertices =
     [
@@ -240,7 +240,7 @@ const car = Body.create
 
 var carStartPoint2 = [600, 350],
     carWidth2 = 60,
-    carHeight2 = 20,
+    carHeight2 = carWidth, // Used to be carWidth2/3
     carVertices2 =
     [
       {x : carStartPoint[0],               y : carStartPoint[0]},
@@ -284,11 +284,11 @@ var carOnGround = true,
     carAvailableJumps = 2,
     carAvailableJumps2 = 2; // Player 2
     carDriveForce = 0.001 * car.mass,
-    carJumpForce = -0.008 * car.mass,
+    carJumpForce = -0.002 * car.mass,
     carFlipForce = 0.003 * car.mass,
     carAirRotationalForce = 0.0004 * car.mass,
-    carBoostForce = 0.0009 * car.mass,
-    carMaxSpeedOnGround = 6;
+    carBoostForce = 0.0005 * car.mass,
+    carMaxSpeedOnGround = 4;
 
 
 
