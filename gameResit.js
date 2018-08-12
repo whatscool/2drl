@@ -86,7 +86,8 @@ var wallSize = 50;
 
     var roof = Bodies.rectangle(window.innerWidth/2, wallSize/2, window.innerWidth, wallSize,
       {
-        isStatic: true
+        isStatic: true,
+        friction: 0
       });
 
     var floor = Bodies.rectangle(window.innerWidth/2, window.innerHeight - wallSize, window.innerWidth, wallSize,
@@ -95,19 +96,20 @@ var wallSize = 50;
         friction: 0,
         opacity: 0,
         visible: false,
-        render: {fillStyle: "black"}
-        //render: {sprite: {texture: "transparent.png"}}
+        render: {fillStyle: "black"},
+        restitution: 0
       });
 
     var rightWall = Bodies.rectangle(window.innerWidth - 60, 0, wallSize, window.innerHeight*2,
     {
       isStatic: true,
-      //render: {sprite: {texture: "transparent.png"}}
+      friction: 0
     });
 
     var leftWall = Bodies.rectangle(30, 0, wallSize, window.innerHeight *2,
     {
-      isStatic: true
+      isStatic: true,
+      friction: 0
     });
 
 
@@ -210,7 +212,7 @@ var carStartPoint = [200, 350],
       {x : carStartPoint[0] ,           y : carStartPoint[0]+carHeight}
     ];
 
-const car = Matter.Bodies.fromVertices(carStartPoint[0], carStartPoint[1], carVertices);
+const car = Matter.Bodies.fromVertices(carStartPoint[0], carStartPoint[1], carVertices, {friction: 0, mass: 100, restitution: 0});
 const refBL = Matter.Bodies.circle(car.position.x - carWidth/2, car.position.y + carHeight/2, 0.01);
 const refTL = Matter.Bodies.circle(car.position.x - carWidth/2, car.position.y - carHeight/2, 0.01);
 /*
@@ -239,9 +241,9 @@ const car = Body.create
 var carWidth2 = 60,
     carHeight2 = 20;
 
-const car2 = Matter.Bodies.fromVertices(1050, 350, [{x:200, y:200},{x:140, y:210},{x:140, y:220},{x: 200, y: 220}])
-const refBR = Matter.Bodies.circle(car2.position.x + carWidth2/2, car2.position.y + carHeight2/2, 0.01)
-const refTR = Matter.Bodies.circle(car2.position.x + carWidth2/2, car2.position.y - carHeight2/2, 0.01)
+const car2 = Matter.Bodies.fromVertices(1050, 350, [{x:200, y:200},{x:140, y:210},{x:140, y:220},{x: 200, y: 220}], {friction: 0, mass: 100, restitution: 0});
+const refBR = Matter.Bodies.circle(car2.position.x + carWidth2/2, car2.position.y + carHeight2/2, 0.01);
+const refTR = Matter.Bodies.circle(car2.position.x + carWidth2/2, car2.position.y - carHeight2/2, 0.01);
 /*
 const carBody2 = Matter.Bodies.fromVertices(1050, 350, [{x:200, y:200},{x:140, y:210},{x:140, y:220},{x: 200, y: 220}])
 const frontWheel2 = Matter.Bodies.circle(carBody2.position.x -20, carBody2.position.y +15, 8)
