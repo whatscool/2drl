@@ -159,7 +159,7 @@ var wallSize = 50;
 
 
     var rightGoalStartPoint = [window.innerWidth, 200];
-    var testBox = Bodies.rectangle(500, 200, 20, 20,{isStatic: true});
+    //var testBox = Bodies.rectangle(500, 200, 20, 20,{isStatic: true});
 
 
     var rightGoalTop = Bodies.rectangle(rightGoalStartPoint[0], rightGoalStartPoint[1], goalWidth, barWidth,
@@ -294,11 +294,14 @@ var carOnGround = true,
     carMaxSpeedOnGround = 5;
 
 
+    var testCircle1 = Matter.Bodies.circle(300, 300, 20, {isStatic: true});
+    var testCircle2 = Matter.Bodies.circle(300, 300, 40, {isStatic: true});
 
+    //Matter.Bounds.contains(bounds, point)
 
 
   // Add all of the bodies to the world
-  World.add(engine.world, [car, car2, ball, floor, roof, leftWall, rightWall, leftGoal, rightGoal, testBox]);
+  World.add(engine.world, [car, car2, ball, floor, roof, leftWall, rightWall, leftGoal, rightGoal, testCircle1, testCircle2]);
 
 
 
