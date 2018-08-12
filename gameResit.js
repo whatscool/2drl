@@ -180,7 +180,7 @@ var wallSize = 50;
       mass: 100,
       isStatic: true,
       //frictionStatic: 0.5,
-      restitution: -1,
+      restitution: -1
       //sleepThreshold: Infinity,
       //collisionFilter: {group: -2},
     });
