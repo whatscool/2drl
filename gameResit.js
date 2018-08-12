@@ -212,9 +212,9 @@ var carStartPoint = [200, 350],
       {x : carStartPoint[0] ,           y : carStartPoint[0]+carHeight}
     ];
 
-const car = Matter.Bodies.fromVertices(carStartPoint[0], carStartPoint[1], carVertices, {friction: 0, mass: 100, restitution: 0});
-const refBL = Matter.Bodies.circle(car.position.x - carWidth/2, car.position.y + carHeight/2, 0.01);
-const refTL = Matter.Bodies.circle(car.position.x - carWidth/2, car.position.y - carHeight/2, 0.01);
+const car = Matter.Bodies.fromVertices(carStartPoint[0], carStartPoint[1], carVertices, {friction: 0, mass: 100, restitution: 0, inertia: 100000});
+const refBL = Matter.Bodies.circle(car.position.x - carWidth/2, car.position.y + carHeight/2, 5);
+const refTL = Matter.Bodies.circle(car.position.x - carWidth/2, car.position.y - carHeight/2, 5);
 /*
 const carBody = Matter.Bodies.fromVertices(carStartPoint[0], carStartPoint[1], carVertices);
 const frontWheel = Matter.Bodies.circle(carBody.position.x - carWidth/3, carBody.position.y +(3*carHeight/4), wheelRadius);
@@ -238,12 +238,20 @@ const car = Body.create
 //**********************************************************************************
 // PLAYER 2
 
-var carWidth2 = 60,
-    carHeight2 = 20;
+var carStartPoint2 = [600, 350],
+    carWidth2 = 60,
+    carHeight2 = 20,
+    carVertices2 =
+    [
+      {x : carStartPoint[0],               y : carStartPoint[0]},
+      {x : carStartPoint[0] - carWidth2,   y : carStartPoint[0] + (carHeight2/2)},
+      {x : carStartPoint[0] - carWidth2,   y : carStartPoint[0] + carHeight2},
+      {x : carStartPoint[0],               y : carStartPoint[0] + carHeight2}
+    ];
 
-const car2 = Matter.Bodies.fromVertices(1050, 350, [{x:200, y:200},{x:140, y:210},{x:140, y:220},{x: 200, y: 220}], {friction: 0, mass: 100, restitution: 0});
-const refBR = Matter.Bodies.circle(car2.position.x + carWidth2/2, car2.position.y + carHeight2/2, 0.01);
-const refTR = Matter.Bodies.circle(car2.position.x + carWidth2/2, car2.position.y - carHeight2/2, 0.01);
+const car2 = Matter.Bodies.fromVertices(carStartPoint2[0], carStartPoint2[1], carVertices2, {friction: 0, mass: 100, restitution: 0, inertia: 100000});
+const refBR = Matter.Bodies.circle(car2.position.x + carWidth2/2, car2.position.y + carHeight2/2, 5);
+const refTR = Matter.Bodies.circle(car2.position.x + carWidth2/2, car2.position.y - carHeight2/2, 5);
 /*
 const carBody2 = Matter.Bodies.fromVertices(1050, 350, [{x:200, y:200},{x:140, y:210},{x:140, y:220},{x: 200, y: 220}])
 const frontWheel2 = Matter.Bodies.circle(carBody2.position.x -20, carBody2.position.y +15, 8)
@@ -567,6 +575,7 @@ function onGround2()
 }
 
 
+/*
 function calculateAngle()
 {
   var dy = (refBL.position.y - refTL.position.y);
@@ -587,8 +596,26 @@ function calculateAngle2()
   carAngleRadians2 = theta;
   carAngleDegrees2 = 180 + (theta * 180/Math.PI);
 }
+*/
 
 
+
+function calculateAngle()
+{
+  var theta = car.angle;
+
+  carAngleRadians = theta;
+  carAngleDegrees = 180 + (theta * 180/Math.PI);
+}
+
+
+function calculateAngle2()
+{
+  var theta = car2.angle;
+
+  carAngleRadians2 = theta;
+  carAngleDegrees2 = 180 + (theta * 180/Math.PI);
+}
 
 
 
