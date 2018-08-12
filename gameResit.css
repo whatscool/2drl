@@ -1,0 +1,29 @@
+#box
+{
+  background-color: red;
+  height: 50px;
+  left: 150px;
+  position: absolute;
+  top: 10px;
+  width: 50px;
+}
+
+#fpsDisplay
+{
+  position: absolute;
+  top: 70px;
+  left: 10px;
+}
+
+/*
+#myCanvas
+{
+   background-image:url('grid_background.png');
+    background-repeat:no-repeat;
+    background-size:contain;
+    height: 100%;
+	width: 100%;
+	background-position:center;
+
+}
+*/
