@@ -1,137 +1,22 @@
-/*
-var box = document.getElementById("box"),
-    fpsDisplay = document.getElementById("fpsDisplay"),
-    boxPos = 10,
-    boxLastPos = 10,
-    boxVelocity = 0.08,
-    limit = 300,
-    lastFrameTimeMs = 0, // The last time the loop was run
-    maxFPS = 60
-    delta = 0,
-    timestep = 1000 / 60,
-    fps = 60,
-    framesThisSecond = 0,
-    lastFpsUpdate = 0,
-    running = false,
-    started = false,
-    frameID = 0; // The maximum FPS we want to allow
-
-function update(delta)
-{
-  boxLastPos = boxPos;
-  boxPos += boxVelocity * delta;
-  // Switch directions if we go too far
-  if (boxPos >= limit || boxPos <= 0) boxVelocity = -boxVelocity;
-}
-
-function draw(interp)
-{
-  box.style.left = (boxLastPos + (boxPos - boxLastPos) * interp) + 'px';
-  fpsDisplay.textContent = Math.round(fps) + ' FPS';
-}
-
-function panic()
-{
-  delta = 0;
-}
-
-//function begin();
-//{
-
-//}
-
-function end(fps)
-{
-  if(fps < 25)
-  {
-    box.style.backgroundColor = "black";
-  }
-  else if(fps > 30)
-  {
-    box.style.backgroundColor = "red";
-  }
-}
-
-function stop()
-{
-  running = false;
-  started = false;
-  cancelAnimationFrame(frameID);
-}
-
-function start()
-{
-  if(!started)
-  {
-    started = true;
-    frameID = requestAnimationFrame(function(timestamp)
-    {
-      draw(1);
-      running = true;
-      lastFrameTimeMs = timestamp;
-      lastFpsUpdate = timestamp;
-      framesThisSecond = 0;
-      frameID = requestAnimationFrame(mainLoop);
-    });
-  }
-}
-
-function mainLoop(timestamp)
-{
-  // Throttle the frame rate.
-  if (timestamp < lastFrameTimeMs + (1000 / maxFPS))
-  {
-    frameID = requestAnimationFrame(mainLoop);
-    return;
-  }
-  delta += timestamp - lastFrameTimeMs; // Get the delta time since last frame
-  lastFrameTimeMs = timestamp;
-
-  //begin(timestamp, delta);
-
-  if (timestamp > lastFpsUpdate + 1000)
-  {
-    fps = 0.25 * framesThisSecond + 0.75 * fps;
-
-    lastFpsUpdate = timestamp;
-    framesThisSecond = 0;
-  }
-  framesThisSecond++;
-
-  // Simulate the total elapsed time in fixed-size chunks
-  var numUpdateSteps = 0;
-  while (delta >= timestep)
-  {
-    update(timestep);
-    delta -= timestep;
-    if (++numUpdateSteps >= 240)
-    {
-      panic();
-      break;
-    }
-  }
-
-  draw(delta/timestep);
-
-  end(fps);
-
-  frameID = requestAnimationFrame(mainLoop);
-}
-
-start();
-*/
-
-
-
-
-
-
-
-
-
 
 function game ()
 {
+// PRELOADING
+
+  let goalSound = new Audio("assets/audio/airhorn.mp3"),
+      boostAudio = new Audio("assets/audio/boost_sound.wav"),
+      carAudio = new Audio("assets/audio/car_engine.wav"),
+      carAudio2 = new Audio("assets/audio/car_engine_2.wav"),
+      backgroundAudio = new Audio("assets/audio/arcade_music.wav"),
+      jumpAudio = new Audio("assets/audio/jump.wav");
+
+  carAudio.volume = 0.1;
+  carAudio.volume = 0.1;
+
+  var boostImg = new Image();
+  boostImg.src = "assets/graphics/boost.png";
+
+
   var canvas = document.getElementById('myCanvas');
   var context = canvas.getContext("2d");
   canvas.width = window.innerWidth;
@@ -167,11 +52,8 @@ function game ()
       width: window.innerWidth,
       height: window.innerHeight,
       wireframes: true,
-      //background: "background_1.png"
-      background: "grid_background_widescreen.png",
-      //backgroundSize: 10000,
+      background: "assets/graphics/grid_background_widescreen.png",
       hasBounds: false
-
     }
   });
 
@@ -220,7 +102,7 @@ World.add(engine.world, bodies);
       restitution: 0.95,
       friction: 0,
       frictionAir: 0.02,
-      render: {sprite: {texture: "football.png", xScale: 0.09, yScale: 0.09}}
+      render: {sprite: {texture: "assets/graphics/football.png", xScale: 0.09, yScale: 0.09}}
     });
 
 
@@ -382,7 +264,7 @@ const car = Body.create
   friction: 0,
   mass: 100,
   //frictionStatic: 0.5,
-  restitution: -1,
+  restitution: -1
   //sleepThreshold: Infinity,
   //collisionFilter: {group: -2},
 });
@@ -396,23 +278,23 @@ var carWidth2 = 60,
     carHeight2 = 20;
 const carBody2 = Matter.Bodies.fromVertices(1050, 350, [{x:200, y:200},{x:140, y:210},{x:140, y:220},{x: 200, y: 220}],
   {
-    render: {sprite: {texture: "tansparent.png", xScale: 0.09, yScale: 0.09}}
+    render: {sprite: {texture: "assets/graphics/transparent.png", xScale: 0.09, yScale: 0.09}}
   });
   const frontWheel2 = Matter.Bodies.circle(carBody2.position.x -20, carBody2.position.y +15, 8,
   {
-    render: {sprite: {texture: "tansparent.png", xScale: 0.09, yScale: 0.09}}
+    render: {sprite: {texture: "assets/graphics/transparent.png", xScale: 0.09, yScale: 0.09}}
   });
   const rearWheel2 = Matter.Bodies.circle(carBody2.position.x +20, carBody2.position.y +15, 8,
   {
-    render: {sprite: {texture: "tansparent.png", xScale: 0.09, yScale: 0.09}}
+    render: {sprite: {texture: "assets/graphics/transparent.png", xScale: 0.09, yScale: 0.09}}
   });
 const refBR = Matter.Bodies.circle(carBody2.position.x + carWidth2/2, carBody2.position.y + carHeight2/2, 0.01,
 {
-  render: {sprite: {texture: "tansparent.png", xScale: 0.09, yScale: 0.09}}
+  render: {sprite: {texture: "assets/graphics/transparent.png", xScale: 0.09, yScale: 0.09}}
 });
 const refTR = Matter.Bodies.circle(carBody2.position.x + carWidth2/2, carBody2.position.y - carHeight2/2, 0.01,
 {
-  render: {sprite: {texture: "tansparent.png", xScale: 0.09, yScale: 0.09}}
+  render: {sprite: {texture: "assets/graphics/transparent.png", xScale: 0.09, yScale: 0.09}}
 });
 const car2 = Body.create
 ({
@@ -421,7 +303,7 @@ const car2 = Body.create
   friction: 0,
   mass: 100,
   //frictionStatic: 0.5,
-  restitution: -1,
+  restitution: -1
   //sleepThreshold: Infinity,
   //collisionFilter: {group: -2},
 });
@@ -742,22 +624,15 @@ function bricks()
 {
   for(i=0; i<20; i++)
   {
-    drawSprite("floor_1", 60, 60, "bricks.png", 10 +(i*60), 480, 0);
+    drawSprite("floor_1", 60, 60, "assets/graphics/bricks.png", 10 +(i*60), 480, 0);
   }
-  drawSprite("floor_1", 30, 60, "bricks.png", 10 +(20*60), 480, 0);
+  drawSprite("floor_1", 30, 60, "assets/graphics/bricks.png", 10 +(20*60), 480, 0);
 }
 
 
 
 //////////////////////////////////////////////////////// AUDIO
-var boostAudio = new Audio("boost_sound.wav");
-var carAudio = new Audio("car_engine.wav");
-carAudio.volume = 0.1;
-var carAudio2 = new Audio("car_engine_2.wav");
-carAudio.volume = 0.1;
-//var backgroundAudio = new Audio("crowd_2.wav");
-var backgroundAudio = new Audio("arcade_music.wav");
-function playSounds()
+function playSounds(backgroundAudio, carAudio)
 {
   backgroundAudio.play();
   carAudio.play();
@@ -883,8 +758,6 @@ function drawSprite(name, width, height, source, posX, posY, rotation, centreOfR
   }
 
 
-  var boostImg = new Image();
-  boostImg.src = "boost.png";
   function drawMovingImage()
   {
     currentFrame = ++currentFrame % cols;
@@ -918,8 +791,7 @@ function drawSprite(name, width, height, source, posX, posY, rotation, centreOfR
 
   function goalReset()
   {
-    //var goalSound = new Audio("airhorn.mp3");
-    //goalSound.play();
+    goalSound.play();
     car.position.x = 200;
     car.position.y = 350;
     car2.position.x = 1050;
@@ -941,7 +813,7 @@ function drawSprite(name, width, height, source, posX, posY, rotation, centreOfR
   ////////////////////////////////////////////// MAIN lOOP
     function cycle()
   {
-    playSounds();
+    playSounds(backgroundAudio, carAudio);
     //addSprites();
 
     //drawSprite("carPic2", 100, 40, "boost.png", car.position.x, car.position.y, carAngleDegrees, car.position.x, car.position.y);
@@ -971,9 +843,9 @@ function drawSprite(name, width, height, source, posX, posY, rotation, centreOfR
 
   function addSprites()
   {
-    drawSprite("floor_1", 60, 60, "bricks.png", 10, 480, 0);
-    drawSprite("carPic", 100, 40, "race_car_forwards.png", car.position.x, car.position.y, carAngleDegrees, car.position.x, car.position.y);
-    drawSprite("carPic2", 100, 40, "muscle_car_backwards.png", car2.position.x, car2.position.y, carAngleDegrees2, car2.position.x, car2.position.y);
+    drawSprite("floor_1", 60, 60, "assets/graphics/bricks.png", 10, 480, 0);
+    drawSprite("carPic", 100, 40, "assets/graphics/race_car_forwards.png", car.position.x, car.position.y, carAngleDegrees, car.position.x, car.position.y);
+    drawSprite("carPic2", 100, 40, "assets/graphics/muscle_car_backwards.png", car2.position.x, car2.position.y, carAngleDegrees2, car2.position.x, car2.position.y);
   }
 
 
