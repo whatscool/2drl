@@ -213,8 +213,8 @@ var carStartPoint = [200, 350],
     ];
 
 const car = Matter.Bodies.fromVertices(carStartPoint[0], carStartPoint[1], carVertices, {friction: 0, mass: 100, restitution: 0, inertia: 100000});
-const refBL = Matter.Bodies.circle(car.position.x - carWidth/2, car.position.y + carHeight/2, 0.01);
-const refTL = Matter.Bodies.circle(car.position.x - carWidth/2, car.position.y - carHeight/2, 0.01);
+const refBL = Matter.Bodies.circle(car.position.x - carWidth/2, car.position.y + carHeight/2, 5);
+const refTL = Matter.Bodies.circle(car.position.x - carWidth/2, car.position.y - carHeight/2, 5);
 /*
 const carBody = Matter.Bodies.fromVertices(carStartPoint[0], carStartPoint[1], carVertices);
 const frontWheel = Matter.Bodies.circle(carBody.position.x - carWidth/3, carBody.position.y +(3*carHeight/4), wheelRadius);
@@ -575,6 +575,7 @@ function onGround2()
 }
 
 
+/*
 function calculateAngle()
 {
   var dy = (refBL.position.y - refTL.position.y);
@@ -595,8 +596,26 @@ function calculateAngle2()
   carAngleRadians2 = theta;
   carAngleDegrees2 = 180 + (theta * 180/Math.PI);
 }
+*/
 
 
+
+function calculateAngle()
+{
+  var theta = car.angle;
+
+  carAngleRadians = theta;
+  carAngleDegrees = 180 + (theta * 180/Math.PI);
+}
+
+
+function calculateAngle2()
+{
+  var theta = car2.angle;
+
+  carAngleRadians2 = theta;
+  carAngleDegrees2 = 180 + (theta * 180/Math.PI);
+}
 
 
 
