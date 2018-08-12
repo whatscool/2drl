@@ -385,7 +385,10 @@ function controls()
       let rotationalForce = 0.003;
       Body.applyForce(car,
         { x: (car.position.x - carWidth/2), y: (car.position.y) },
-        { x:0, y:carAirRotationalForce } );
+        { x:0, y:carAirRotationalForce/2 } );
+      Body.applyForce(car,
+        { x: (car.position.x + carWidth/2), y: (car.position.y) },
+        { x:0, y:-carAirRotationalForce/2 } );
     }
 
 
@@ -406,7 +409,12 @@ function controls()
       let rotationalForce = 0.003;
       Body.applyForce(car,
         { x: (car.position.x - carWidth/2), y: (car.position.y) },
-        { x:0, y:-carAirRotationalForce } );
+        { x:0, y:-carAirRotationalForce/2 } );
+      Body.applyForce(car,
+        { x: (car.position.x + carWidth/2), y: (car.position.y) },
+        { x:0, y:carAirRotationalForce/2 } );
+
+
     }
 
 
@@ -478,7 +486,10 @@ function controls2()
     {
       Body.applyForce(car2,
         { x: (car2.position.x + carWidth2/2), y: (car2.position.y) },
-        { x:0, y:-carAirRotationalForce } );
+        { x:0, y:-carAirRotationalForce/2 } );
+      Body.applyForce(car2,
+        { x: (car2.position.x - carWidth2/2), y: (car2.position.y) },
+        { x:0, y:carAirRotationalForce/2 } );
     }
 
 
@@ -498,7 +509,10 @@ function controls2()
     {
       Body.applyForce(car2,
         { x: (car2.position.x - carWidth2/2), y: (car2.position.y) },
-        { x:0, y:-carAirRotationalForce } );
+        { x:0, y:-carAirRotationalForce/2 } );
+      Body.applyForce(car2,
+        { x: (car2.position.x + carWidth2/2), y: (car2.position.y) },
+        { x:0, y:carAirRotationalForce/2 } );
     }
 
 
