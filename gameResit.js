@@ -1,4 +1,3 @@
-
 function game ()
 {
 // PRELOADING
@@ -19,11 +18,10 @@ function game ()
 
   var canvas = document.getElementById('myCanvas');
   var context = canvas.getContext("2d");
+
   canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-
-
-
+  canvas.height = window.innerHeight*0.7;
+  
   // module aliases
   var Engine = Matter.Engine,
       Render = Matter.Render,
@@ -36,8 +34,14 @@ function game ()
 
   // create an engine
   var engine = Engine.create();
-  engine.world.gravity.y = 0.2;
+  engine.world.gravity.y = 1;
 
+  document.getElementById('worldgravityInput').onchange = function(){   
+    newgrav= 1*this.value/100;
+    engine.world.gravity.y = newgrav;
+    console.log(newgrav);
+    console.log(engine.world.gravity.y);
+  }
   // create a renderer
   var render = Render.create
   ({
@@ -49,8 +53,8 @@ function game ()
     {
       //width: 100,
       //height: 100,
-      width: window.innerWidth,
-      height: window.innerHeight,
+      width: canvas.width,
+      height: canvas.height,
       wireframes: true,
       background: "assets/graphics/grid_background_widescreen.png",
       hasBounds: false
@@ -65,15 +69,19 @@ function game ()
 
 
 
-  var ball = Bodies.circle(window.innerWidth/2, window.innerHeight/2, 30,
+  var ball = Bodies.circle(window.innerWidth/2, canvas.height/2, 30,
     {
-      mass: 10,// Used to be 0.5
+      mass: 5,// Used to be 0.5
       inertia: 0,
-      restitution: 0.95,
+      restitution: 0.5,
       friction: 0,
       frictionAir: 0.02,
       render: {sprite: {texture: "assets/graphics/football.png", xScale: 0.09, yScale: 0.09}}
     });
+
+  document.getElementById('ballmassInput').onchange = function(){   
+    ball.mass = this.value;
+  }
 
 
 
@@ -90,7 +98,7 @@ var wallSize = 50;
         friction: 0
       });
 
-    var floor = Bodies.rectangle(window.innerWidth/2, window.innerHeight - wallSize, window.innerWidth, wallSize,
+    var floor = Bodies.rectangle(window.innerWidth/2, canvas.height - wallSize, window.innerWidth, wallSize,
       {
         isStatic: true,
         friction: 0,
@@ -100,13 +108,13 @@ var wallSize = 50;
         restitution: 0
       });
 
-    var rightWall = Bodies.rectangle(window.innerWidth - 60, 0, wallSize, window.innerHeight*2,
+    var rightWall = Bodies.rectangle(window.innerWidth - 60, 0, wallSize, canvas.height*2,
     {
       isStatic: true,
       friction: 0
     });
 
-    var leftWall = Bodies.rectangle(30, 0, wallSize, window.innerHeight *2,
+    var leftWall = Bodies.rectangle(30, 0, wallSize, canvas.height *2,
     {
       isStatic: true,
       friction: 0
@@ -276,7 +284,7 @@ var carOnGround = true,
     carAvailableJumps = 2,
     carAvailableJumps2 = 2; // Player 2
     carDriveForce = 0.001 * car.mass,
-    carJumpForce = -0.008 * car.mass,
+    carJumpForce = -0.001 * car.mass,
     carFlipForce = 0.003 * car.mass,
     carAirRotationalForce = 0.0004 * car.mass,
     carBoostForce = 0.0009 * car.mass,
@@ -356,7 +364,6 @@ function controls()
       {
         //Body.applyForce( car, {x: car.position.x, y: car.position.y}, {x: 0.5, y: 0})
         Body.applyForce(car,car.position,{x:-carDriveForce,y:0});
-        //console.log("Car Speed: " + car.speed);
       }
     }
 
@@ -375,7 +382,6 @@ function controls()
       {
         //Body.applyForce( car, {x: car.position.x, y: car.position.y}, {x: 0.5, y: 0})
         Body.applyForce(car,car.position,{x:carDriveForce,y:0});
-        //console.log("Car Speed: " + car.speed);
       }
     }
   }
@@ -441,7 +447,7 @@ function controls()
 function controls2()
 {
   if(onGround2())
-  {
+    {
     // w jump up       - momentary
     if(keys["73"]) // KEY_I
     {
@@ -458,7 +464,6 @@ function controls2()
       {
         //Body.applyForce( car, {x: car.position.x, y: car.position.y}, {x: 0.5, y: 0})
         Body.applyForce(car2,car2.position,{x:-carDriveForce,y:0});
-        //console.log("Car Speed: " + car.speed);
       }
     }
 
@@ -477,7 +482,6 @@ function controls2()
       {
         //Body.applyForce( car, {x: car.position.x, y: car.position.y}, {x: 0.5, y: 0})
         Body.applyForce(car2,car2.position,{x:carDriveForce,y:0});
-        //console.log("Car Speed: " + car.speed);
       }
     }
   }
@@ -550,7 +554,6 @@ function onGround()
   }
 }
 
-console.log("ground position: " + floor.position.y);
 function onGround2()
 {
   //Rear: 471.9451171491292
@@ -618,15 +621,11 @@ function calculateAngle2()
     car2.position.x = 1050;
     car2.position.y = 350;
     ball.position.x = window.innerWidth/2;
-    ball.position.y = window.innerHeight/2;
+    ball.position.y = canvas.height/2;
   }
 
-
-
-
   ////////////////////////////////////////////// MAIN lOOP
-    function cycle()
-  {
+    function cycle() {
     /// Make the goal move up and down
     var py = 250 + 30 * Math.sin(engine.timing.timestamp * 0.002);
     Body.setVelocity(leftGoal, { x: 0, y: py - leftGoal.position.y });
@@ -641,6 +640,7 @@ function calculateAngle2()
     controls();
     controls2();
 
+
     requestAnimationFrame(cycle);
   }
   cycle();
@@ -654,4 +654,7 @@ function calculateAngle2()
   // run the renderer
   Render.run(render);
   }
-window.onload = game();
+  document.addEventListener('DOMContentLoaded', function(){ 
+      game();
+}, false);
+

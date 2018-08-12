@@ -3,42 +3,43 @@
 <meta charset="UTF-8"/>
 <head>
   <title>This is the title</title>
+    <style type="text/css">
+      body, html {
+        margin:0;
+        padding:0;
+        background-color:0;
+      }
+      label {
+        whitespace: nowrap;
+        display:inline-block;
+      }
+    </style>
 </head>
 <body>
-  <div class="playerOneScore">
-    <p id="1" style="color:black; font-size:30px; "> 0 </p>
-    <style type="text/css">
-      .playerOneScore
-      {
-        width: 100px;
-        height: 100px;
-        position:absolute;
-        top: 50px;
-        right: 1000px;
-        background-color: blue;
-        opacity: 0.5;
-      }
-    </style>
-  </div>
-  <div class="playerTwoScore">
-    <p id="2" style="color:black; font-size:30px; "> 0 </p>
-    <style type="text/css">
-      .playerTwoScore
-      {
-        width: 100px;
-        height: 100px;
-        position:absolute;
-        top: 50px;
-        right:200px;
-        background-color: red;
-        opacity: 0.5;
-      }
-    </style>
-  </div>
-  <div id="div">
+  <div id="canvasdiv">
     <canvas id="myCanvas"></canvas>
     <script src="matter.js" type="text/javascript"></script>
     <script src="gameResit.js" type="text/javascript"></script>
+  </div>
+  <div>
+    <label for='worldgravityInput'>World Gravity:
+      <input type="number" id="worldgravityInput" name="worldgravityInput" />
+    </label>
+    <label for='carmassInput'>Car Mass:
+      <input type="number" id="carmassInput" name="carmassInput" />
+    </label>
+    <label for='ballmassInput'>Ball Mass:
+        <input type="number" id="ballmassInput" name="ballmassInput" />
+    </label>
+    <label for='jumpforceInput'>Jump Force:
+      <input type="number" id="jumpforceInput" name="jumpforceInput" />
+    </label>
+    <label for='boostforceInput'>Boost Force:
+      <input type="number" id="boostforceInput" name="boostforceInput" />
+    </label>
+    <label for='flipforceInput'>Flip Force:
+      <input type="number" id="flipforceInput" name="worldgravityInput"/>
+    </label>
   </div>
 </body>
 
