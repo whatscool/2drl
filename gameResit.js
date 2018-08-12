@@ -67,11 +67,12 @@ function game ()
 
   var ball = Bodies.circle(window.innerWidth/2, window.innerHeight/2, 30,
     {
-      mass: 1,// Used to be 10
-      inertia: 10,
+      mass: 0.02,// Used to be 0.01
+      inertia: 1,
       restitution: 0.95,
-      friction: 0.5,
-      frictionAir: 0.02,
+      friction: 0,
+      frictionAir: 0,
+      //collisionFilter: {group: 1}
       //render: {sprite: {texture: "assets/graphics/football.png", xScale: 0.09, yScale: 0.09}}
     });
 
@@ -87,7 +88,8 @@ var wallSize = 50;
     var roof = Bodies.rectangle(window.innerWidth/2, wallSize/2, window.innerWidth, wallSize,
       {
         isStatic: true,
-        friction: 0
+        friction: 0,
+        //restitution: 0
       });
 
     var floor = Bodies.rectangle(window.innerWidth/2, window.innerHeight - wallSize, window.innerWidth, wallSize,
@@ -96,8 +98,9 @@ var wallSize = 50;
         friction: 0,
         opacity: 0,
         visible: false,
-        render: {fillStyle: "black"},
-        restitution: 0
+        //render: {fillStyle: "black"},
+        //restitution: 0,
+        //collisionFilter: {group: 1}
       });
 
     var rightWall = Bodies.rectangle(window.innerWidth - 60, 0, wallSize, window.innerHeight*2,
@@ -147,7 +150,7 @@ var wallSize = 50;
       mass: 100,
       isStatic: true,
       //frictionStatic: 0.5,
-      restitution: -1,
+      //restitution: -1,
       //sleepThreshold: Infinity,
       //collisionFilter: {group: -2},
     });
@@ -182,7 +185,7 @@ var wallSize = 50;
       mass: 100,
       isStatic: true,
       //frictionStatic: 0.5,
-      restitution: -1
+      //restitution: -1
       //sleepThreshold: Infinity,
       //collisionFilter: {group: -2},
     });
@@ -283,12 +286,12 @@ var carOnGround = true,
     carAngleDegrees2 = 0; // Player 2
     carAvailableJumps = 2,
     carAvailableJumps2 = 2; // Player 2
-    carDriveForce = 0.001 * car.mass,
-    carJumpForce = -0.002 * car.mass,
+    carDriveForce = 0.003 * car.mass,
+    carJumpForce = -0.0025 * car.mass,
     carFlipForce = 0.003 * car.mass,
-    carAirRotationalForce = 0.0004 * car.mass,
-    carBoostForce = 0.0005 * car.mass,
-    carMaxSpeedOnGround = 4;
+    carAirRotationalForce = 0.00075 * car.mass,
+    carBoostForce = 0.0008 * car.mass,
+    carMaxSpeedOnGround = 5;
 
 
 
