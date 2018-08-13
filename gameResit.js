@@ -160,6 +160,7 @@ var wallSize = 50;
     var leftGoalDetector = Bodies.rectangle(leftGoalStartPoint[0] - barWidth/2, leftGoalStartPoint[1] + goalHeight/2, detectorWidth, goalHeight - barWidth,
     {
       isStatic: true,
+      isSensor: true,
       collisionFilter: {category: defaultCategory}
     });
 
@@ -205,6 +206,7 @@ var wallSize = 50;
     var rightGoalDetector = Bodies.rectangle(rightGoalStartPoint[0] + barWidth/2, rightGoalStartPoint[1] + goalHeight/2, detectorWidth, goalHeight - barWidth,
     {
       isStatic: true,
+      isSensor: true,
       collisionFilter: {category: defaultCategory}
     });
 
