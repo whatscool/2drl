@@ -106,7 +106,7 @@ var wallSize = 50;
         friction: 0,
         opacity: 0,
         visible: false,
-        collisionFilter: {category: secondCategory}
+        collisionFilter: {category: defaultCategory}
         //render: {fillStyle: "black"},
         //restitution: 0,
         //collisionFilter: {group: 1}
@@ -263,9 +263,10 @@ var carStartPoint = [200, 350],
 // TESTING A NEW COMPOUND CAR THAT IS JUST WEDGE AND DETECTOR
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const carBody = Matter.Bodies.fromVertices(carStartPoint[0], carStartPoint[1], carVertices, {friction: 0, mass: 100, restitution: 0, inertia: 100000, collisionFilter: {category: defaultCategory}});
-const carBottomDetector = Matter.Bodies.rectangle(carStartPoint[0], carStartPoint[1] +carHeight/2, carWidth + carWidth/5, 2,
+const carBottomDetector = Matter.Bodies.rectangle(carStartPoint[0], carStartPoint[1] +carHeight/2, carWidth/2, 5,
   {
-    collisionFilter: {mask: defaultCategory}
+    collisionFilter: {mask: secondCategory},
+    isSensor: true
   });
 const car = Body.create
 ({
@@ -274,9 +275,8 @@ const car = Body.create
   friction: 0,
   mass: 100,
   //frictionStatic: 0.5,
-  restitution: -1
   //sleepThreshold: Infinity,
-  //collisionFilter: {group: -2},
+  //collisionFilter: {mask: defualtCategory},
 
 });
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -624,6 +624,7 @@ function controls2()
 
 //*******************************************************************************
 
+/*
 var groundClearance = 5;
 function onGround()
 {
@@ -655,6 +656,43 @@ function onGround2()
     return false;
   }
 }
+*/
+
+
+
+
+function onGround()
+{
+  if(Matter.Bounds.overlaps(carBottomDetector.bounds, floor.bounds))
+  {
+    carAvailableJumps = 1;
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+
+function onGround2()
+{
+  //Rear: 471.9451171491292
+  //Front: 471.8888231332251
+  if(car2.position.y >500)
+  {
+    carAvailableJumps2 = 1;
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+
+
+
+
 
 
 /*
