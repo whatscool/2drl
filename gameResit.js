@@ -36,7 +36,7 @@ function game ()
 
   // create an engine
   var engine = Engine.create();
-  engine.world.gravity.y = 0.2;
+  engine.world.gravity.y = 0.3; // Used to be 0.2
 
   // create a renderer
   var render = Render.create
@@ -74,9 +74,9 @@ var defaultCategory = 0x0001,
 
   var ball = Bodies.circle(window.innerWidth/2, window.innerHeight/2, 30,
     {
-      mass: 0.03,// Used to be 0.01
+      mass: 0.001, // Used to be 0.02
       inertia: 1,
-      restitution: 0.97,
+      restitution: 0.60, // Used to be around 0.95
       friction: 0,
       frictionAir: 0,
       collisionFilter: {category: defaultCategory}
@@ -181,7 +181,7 @@ var wallSize = 50;
 
 
 
-    var rightGoalStartPoint = [rightWall.position.x - 150, floor.position.y - 200];
+    var rightGoalStartPoint = [rightWall.position.x - 150, 200];
     //var testBox = Bodies.rectangle(500, 200, 20, 20,{isStatic: true});
 
 
@@ -250,8 +250,8 @@ var wallSize = 50;
 ////////////////////////////////////////////////////////////////////////////////
 
 var carStartPoint = [200, 350],
-    carWidth = 40,
-    carHeight = carWidth, // Used to be carWidth/3
+    carWidth = 60,
+    carHeight = 3*carWidth/5, // Used to be carWidth/3
     wheelRadius = carHeight/2,
     carVertices =
     [
@@ -313,18 +313,42 @@ const car = Body.create
 //**********************************************************************************
 // PLAYER 2
 
-var carStartPoint2 = [600, 350],
+var carStartPoint2 = [1000, 350],
     carWidth2 = 60,
-    carHeight2 = carWidth, // Used to be carWidth2/3
+    carHeight2 = 3*carWidth/5,
     carVertices2 =
     [
-      {x : carStartPoint[0],               y : carStartPoint[0]},
-      {x : carStartPoint[0] - carWidth2,   y : carStartPoint[0] + (carHeight2/2)},
-      {x : carStartPoint[0] - carWidth2,   y : carStartPoint[0] + carHeight2},
-      {x : carStartPoint[0],               y : carStartPoint[0] + carHeight2}
+      {x : carStartPoint2[0],               y : carStartPoint2[0]},
+      {x : carStartPoint2[0] - carWidth2,   y : carStartPoint2[0] + (carHeight2/2)},
+      {x : carStartPoint2[0] - carWidth2,   y : carStartPoint2[0] + carHeight2},
+      {x : carStartPoint2[0],               y : carStartPoint2[0] + carHeight2}
     ];
 
-const car2 = Matter.Bodies.fromVertices(carStartPoint2[0], carStartPoint2[1], carVertices2, {friction: 0, mass: 100, restitution: 0, inertia: 100000});
+
+    // TESTING A NEW COMPOUND CAR THAT IS JUST WEDGE AND DETECTOR
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    const carBody2 = Matter.Bodies.fromVertices(carStartPoint2[0], carStartPoint2[1], carVertices2, {friction: 0, mass: 100, restitution: 0, inertia: 100000, collisionFilter: {category: defaultCategory}});
+    const carBottomDetector2 = Matter.Bodies.rectangle(carStartPoint2[0], carStartPoint2[1] +carHeight2/2, carWidth2/2, 5,
+      {
+        collisionFilter: {mask: secondCategory},
+        isSensor: true
+      });
+    const car2 = Body.create
+    ({
+      parts: [carBody2, carBottomDetector2],
+      inertia: 100000,
+      friction: 0,
+      mass: 100,
+      //frictionStatic: 0.5,
+      //sleepThreshold: Infinity,
+      //collisionFilter: {mask: defualtCategory},
+
+    });
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+//const car2 = Matter.Bodies.fromVertices(carStartPoint2[0], carStartPoint2[1], carVertices2, {friction: 0, mass: 100, restitution: 0, inertia: 100000});
 const refBR = Matter.Bodies.circle(car2.position.x + carWidth2/2, car2.position.y + carHeight2/2, 5);
 const refTR = Matter.Bodies.circle(car2.position.x + carWidth2/2, car2.position.y - carHeight2/2, 5);
 /*
@@ -379,7 +403,7 @@ var carOnGround = true,
 
 
   // Add all of the bodies to the world
-  World.add(engine.world, [car, /*car2,*/ ball, floor, roof, leftWall, rightWall, goals /*leftGoal, rightGoal*/]);
+  World.add(engine.world, [car, car2, ball, floor, roof, leftWall, rightWall, goals /*leftGoal, rightGoal*/]);
 
 
 
@@ -681,7 +705,7 @@ function onGround2()
 {
   //Rear: 471.9451171491292
   //Front: 471.8888231332251
-  if(car2.position.y >500)
+  if(Matter.Bounds.overlaps(carBottomDetector2.bounds, floor.bounds))
   {
     carAvailableJumps2 = 1;
     return true;
