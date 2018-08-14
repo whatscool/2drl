@@ -1,6 +1,4 @@
 
-function game ()
-{
 // PRELOADING
 
   let goalSound = new Audio("assets/audio/airhorn.mp3"),
@@ -17,11 +15,19 @@ function game ()
   boostImg.src = "assets/graphics/boost.png";
 
 
+
+  var backgroundImg = new Image();
+  backgroundImg.src = "assets/graphics/grid_background.png";
+
+
   var canvas = document.getElementById('myCanvas');
   var context = canvas.getContext("2d");
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
+
+
+  context.drawImage(boostImg,300,300);
 
 
   // module aliases
@@ -38,6 +44,8 @@ function game ()
   var engine = Engine.create();
   engine.world.gravity.y = 0.3; // Used to be 0.2
 
+
+
   // create a renderer
   var render = Render.create
   ({
@@ -52,11 +60,12 @@ function game ()
       width: window.innerWidth,
       height: window.innerHeight,
       wireframes: false,
-      background: "assets/graphics/grid_background.png",
+      //background: backgroundImg,
       //background: 'transparent',
       //hasBounds: false
     }
   });
+
 
 
 
@@ -167,7 +176,8 @@ var wallSize = 50;
     {
       isStatic: true,
       isSensor: true,
-      collisionFilter: {category: defaultCategory}
+      collisionFilter: {category: defaultCategory},
+      render: {sprite: {texture: "assets/graphics/blue_glow.png", xScale: 0.36, yScale: 0.18}}
     });
 
     /*
@@ -213,7 +223,8 @@ var wallSize = 50;
     {
       isStatic: true,
       isSensor: true,
-      collisionFilter: {category: defaultCategory}
+      collisionFilter: {category: defaultCategory},
+      render: {sprite: {texture: "assets/graphics/red_glow.png", xScale: 0.36, yScale: 0.18}}
     });
 
     /*
@@ -238,7 +249,7 @@ var wallSize = 50;
       friction: 0,
       mass: 100,
       isStatic: true,
-      collisionFilter: {category: defaultCategory}
+      collisionFilter: {category: defaultCategory},
       //frictionStatic: 0.5,
       //restitution: -1
       //sleepThreshold: Infinity,
@@ -740,12 +751,16 @@ function calculateAngle2()
 
 
 
+
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///     SPRITES
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+/*
   function drawSprite(name, width, height, source, posX, posY, rotation, centreOfRotX, centreOfRotY)
   {
+    console.log("drawSprite started");
     name = new Image();
     name.width = width;
     name.height = height;
@@ -753,46 +768,86 @@ function calculateAngle2()
 
     name.onload = function()
     {
+      console.log("onload started");
       if(rotation != 0)
       {
-
+          console.log("rotation not zero");
           context.translate(centreOfRotX, centreOfRotY);
           context.rotate((rotation + 180) * Math.PI / 180);
           context.drawImage(name, -name.width/2, -name.height/2, name.width, name.height);
           context.rotate(-(rotation + 180) * Math.PI / 180);
           context.translate(-centreOfRotX, -centreOfRotY);
-
       }
       else
       {
+        console.log("rotation zero");
         context.drawImage(name, posX, posY, name.width, name.height);
         //console.log("drawn");
       }
+      console.log("onload finished");
     }
+    console.log("drawSprite finished");
   } // End of drawSprite()
+*/
 
 
 
+
+
+function drawSprite(name, width, height, source, posX, posY, rotation, centreOfRotX, centreOfRotY)
+{
+  console.log("drawSprite started");
+  name = new Image();
+  name.width = width;
+  name.height = height;
+  name.src = source;
+
+  name.onload = function()
+  {
+    console.log("onload started");
+    if(rotation != 0)
+    {
+        console.log("rotation not zero");
+        context.translate(centreOfRotX, centreOfRotY);
+        context.rotate((rotation + 180) * Math.PI / 180);
+        context.drawImage(name, -name.width/2, -name.height/2, name.width, name.height);
+        context.rotate(-(rotation + 180) * Math.PI / 180);
+        context.translate(-centreOfRotX, -centreOfRotY);
+    }
+    else
+    {
+      console.log("rotation zero");
+      context.drawImage(name, posX, posY, name.width, name.height);
+      //console.log("drawn");
+    }
+    console.log("onload finished");
+  }
+  console.log("drawSprite finished");
+} // End of drawSprite()
+
+
+
+
+
+var picture = new Image();
+picture.src = "assets/graphics/race_car_forwards.png";
+picture.height = 100;
+picture.width = 100;
 function draw()
 {
-  console
-  var picture = new Image();
-  picture.src = "assets/graphics/race_car_forwards.png";
-  picture.height = 100;
-  picture.width = 100;
-
+  console.log("draw started");
   picture.onload = function()
   {
+    console.log("draw - onload started");
     context.drawImage(picture,0,0,200,200,300,300,200,200);
   }
 }
 
 
 
-    //drawSprite("carPic", 100, 40, "assets/graphics/race_car_forwards.png", car.position.x, car.position.y, carAngleDegrees, car.position.x, car.position.y);
-    //drawSprite("carPic2", 100, 40, "assets/graphics/muscle_car_backwards.png", car2.position.x, car2.position.y, carAngleDegrees2, car2.position.x, car2.position.y);
 
-    //draw();
+
+
 
 
 
@@ -804,10 +859,43 @@ function draw()
  context.drawImage(carPic, 100, 100);
  */
 
- var scoreboard = new Scoreboard();
- scoreboard.addPoints(10);
- var scoreboard2 = new Scoreboard();
- scoreboard.addPoints(10);
+ //var scoreboard = new Scoreboard();
+ //scoreboard.addPoints(10);
+ //var scoreboard2 = new Scoreboard();
+ //scoreboard.addPoints(10);
+
+
+/*
+ var score = 0;
+ function drawScore()
+ {
+   ctx.font = "60px Arial";
+   ctx.fillStyle = "#0095DD";
+   ctx.fillText("Score: "+score, 100, 100);
+ }
+*/
+
+
+
+function drawPicture()
+{
+  console.log("drawPicture started");
+	var pic = new Image();
+	pic.src = "assets/graphics/race_car_forwards.png";
+
+	pic.width = 100;
+	pic.height = 100;
+	pic.onload = function()
+	{
+    console.log("drawPicture - onload started");
+		context.drawImage(pic, car.position.x, car.position.y);
+	}
+}
+
+
+
+
+
 
 
   ////////////////////////////////////////////// MAIN lOOP
@@ -833,8 +921,19 @@ function draw()
     */
 
 
-    scoreboard.showScore();
-    scoreboard2.showScore();
+    //drawSprite("carPic", 100, 40, "assets/graphics/race_car_forwards.png", car.position.x, car.position.y, carAngleDegrees, car.position.x, car.position.y);
+    //drawSprite("carPic2", 100, 40, "assets/graphics/muscle_car_backwards.png", car2.position.x, car2.position.y, carAngleDegrees2, car2.position.x, car2.position.y);
+
+    //draw();
+    //drawPicture();
+
+
+
+
+    //scoreboard.showScore();
+    //scoreboard2.showScore();
+
+    //drawScore();
 
     calculateAngle();
     calculateAngle2();
@@ -843,7 +942,7 @@ function draw()
     checkForGoal();
     requestAnimationFrame(cycle);
   }
-  cycle();
+  //cycle();
 
 
 
@@ -853,5 +952,5 @@ function draw()
 
   // run the renderer
   Render.run(render);
-  }
-window.onload = game();
+
+window.onload = cycle();
