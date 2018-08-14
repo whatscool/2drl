@@ -1,3 +1,4 @@
+
 function game ()
 {
 // PRELOADING
@@ -37,11 +38,55 @@ function game ()
   engine.world.gravity.y = 1;
 
   document.getElementById('worldgravityInput').onchange = function(){   
-    newgrav= 1*this.value/100;
+    newgrav= this.value;
     engine.world.gravity.y = newgrav;
     console.log(newgrav);
     console.log(engine.world.gravity.y);
   }
+
+  document.getElementById('ballmassInput').onchange = function(){   
+    ball.mass = this.value;
+  }
+  document.getElementById('ballinertiaInput').onchange = function(){   
+    ball.inertia = this.value;
+  }
+  document.getElementById('ballfrictionInput').onchange = function(){   
+    ball.friction = this.value;
+  }
+  document.getElementById('ballfrictionairInput').onchange = function(){   
+    ball.frctionAir = this.value;
+  }
+  document.getElementById('ballrestitutionInput').onchange = function(){   
+    ball.restitution = this.value;
+  }
+  document.getElementById('carmassInput').onchange = function(){   
+    car.mass = this.value;
+  }
+  document.getElementById('carinertiaInput').onchange = function(){   
+    car.inertia = this.value;
+  }
+  document.getElementById('carfrictionInput').onchange = function(){   
+    car.friction = this.value;
+  }
+  document.getElementById('carfrictionairInput').onchange = function(){   
+    car.fitctionAir = this.value;
+  }
+  document.getElementById('carrestitutionInput').onchange = function(){   
+    car.restitution = this.value;
+  }
+  document.getElementById('jumpforceInput').onchange = function(){   
+    carJumpForce = this.value;
+  }
+
+  document.getElementById('boostforceInput').onchange = function(){   
+    carBoostForce = this.value;
+  }
+
+  document.getElementById('flipforceInput').onchange = function(){   
+    carFlipForce = this.value;
+  }
+
+
   // create a renderer
   var render = Render.create
   ({
@@ -78,10 +123,6 @@ function game ()
       frictionAir: 0.02,
       render: {sprite: {texture: "assets/graphics/football.png", xScale: 0.09, yScale: 0.09}}
     });
-
-  document.getElementById('ballmassInput').onchange = function(){   
-    ball.mass = this.value;
-  }
 
 
 
@@ -624,6 +665,8 @@ function calculateAngle2()
     ball.position.y = canvas.height/2;
   }
 
+let framecount = 0;
+
   ////////////////////////////////////////////// MAIN lOOP
     function cycle() {
     /// Make the goal move up and down
@@ -640,13 +683,30 @@ function calculateAngle2()
     controls();
     controls2();
 
-
+    updateTestSuite();
     requestAnimationFrame(cycle);
   }
   cycle();
-
-
-
+function updateTestSuite (){
+  console.log("running test suite update");
+  framecount++;
+  if (framecount%303==0 || framecount == 1) {
+    document.getElementById('worldgravityInput').value = engine.world.gravity.y;
+    document.getElementById('ballmassInput').value = ball.mass;
+    document.getElementById('ballinertiaInput').value = ball.inertia;
+    document.getElementById('ballfrictionInput').value = ball.friction;
+    document.getElementById('ballfrictionairInput').value = ball.frictionAir;
+    document.getElementById('ballrestitutionInput').value = ball.restitution;
+    document.getElementById('carmassInput').value = car.mass;
+    document.getElementById('carinertiaInput').value = car.inertia;
+    document.getElementById('carfrictionInput').value = car.friction;
+    document.getElementById('carfrictionairInput').value = car.frictionAir;
+    document.getElementById('carrestitutionInput').value = car.restitution;
+    document.getElementById('jumpforceInput').value = carJumpForce;
+    document.getElementById('boostforceInput').value = carBoostForce;
+    document.getElementById('flipforceInput').value = carFlipForce;
+  }
+}
   // run the engine
   Engine.run(engine);
   //Engine.update(engine);
