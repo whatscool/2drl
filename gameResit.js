@@ -47,16 +47,21 @@ function game ()
     engine: engine,
     options:
     {
-      //width: 100,
-      //height: 100,
+      //width: 3000,
+      //height: 550,
       width: window.innerWidth,
       height: window.innerHeight,
-      wireframes: true,
-      background: "assets/graphics/grid_background_widescreen.png",
-      hasBounds: false
+      wireframes: false,
+      background: "assets/graphics/grid_background.png",
+      //background: 'transparent',
+      //hasBounds: false
     }
   });
 
+
+
+var playerOneScore = 0,
+    playerTwoScore = 0;
 
 
 /// Collision Filter Categories
@@ -77,9 +82,10 @@ var defaultCategory = 0x0001,
       mass: 0.001, // Used to be 0.02
       inertia: 1,
       restitution: 0.60, // Used to be around 0.95
-      friction: 0,
+      friction: 0.05,
       frictionAir: 0,
-      collisionFilter: {category: defaultCategory}
+      collisionFilter: {category: defaultCategory},
+      render: {sprite: {texture: "assets/graphics/ball.png", xScale: 0.36, yScale: 0.36}}
       //render: {sprite: {texture: "assets/graphics/football.png", xScale: 0.09, yScale: 0.09}}
     });
 
@@ -276,12 +282,14 @@ const car = Body.create
   inertia: 100000,
   friction: 0,
   mass: 100,
+  //render: {sprite: {texture: "assets/graphics/race_car_forwards.png", xScale: 0.36, yScale: 0.36}}
   //frictionStatic: 0.5,
   //sleepThreshold: Infinity,
   //collisionFilter: {mask: defualtCategory},
 
 });
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 
@@ -383,7 +391,7 @@ var carOnGround = true,
     carAvailableJumps = 2,
     carAvailableJumps2 = 2; // Player 2
     carDriveForce = 0.003 * car.mass,
-    carJumpForce = -0.0025 * car.mass,
+    carJumpForce = -0.006 * car.mass,
     carFlipForce = 0.003 * car.mass,
     carAirRotationalForce = 0.00075 * car.mass,
     carBoostForce = 0.0008 * car.mass,
@@ -403,7 +411,7 @@ var carOnGround = true,
 
 
   // Add all of the bodies to the world
-  World.add(engine.world, [car, car2, ball, floor, roof, leftWall, rightWall, goals /*leftGoal, rightGoal*/]);
+  World.add(engine.world, [car, car2, ball, floor, roof, leftWall, rightWall, goals]);
 
 
 
@@ -650,42 +658,6 @@ function controls2()
 
 //*******************************************************************************
 
-/*
-var groundClearance = 5;
-function onGround()
-{
-  //Rear: 471.9451171491292
-  //Front: 471.8888231332251
-  if(car.position.y > 500)
-  {
-    carAvailableJumps = 1;
-    return true;
-  }
-  else
-  {
-    return false;
-  }
-}
-
-console.log("ground position: " + floor.position.y);
-function onGround2()
-{
-  //Rear: 471.9451171491292
-  //Front: 471.8888231332251
-  if(car2.position.y >500)
-  {
-    carAvailableJumps2 = 1;
-    return true;
-  }
-  else
-  {
-    return false;
-  }
-}
-*/
-
-
-
 
 function onGround()
 {
@@ -703,8 +675,6 @@ function onGround()
 
 function onGround2()
 {
-  //Rear: 471.9451171491292
-  //Front: 471.8888231332251
   if(Matter.Bounds.overlaps(carBottomDetector2.bounds, floor.bounds))
   {
     carAvailableJumps2 = 1;
@@ -717,32 +687,6 @@ function onGround2()
 }
 
 
-
-
-
-
-/*
-function calculateAngle()
-{
-  var dy = (refBL.position.y - refTL.position.y);
-  var dx = (refTL.position.x - refBL.position.x);
-  var theta = Math.atan2(dx,dy);
-
-  carAngleRadians = theta;
-  carAngleDegrees = 180 + (theta * 180/Math.PI);
-}
-
-
-function calculateAngle2()
-{
-  var dy = (refBR.position.y - refTR.position.y);
-  var dx = (refTR.position.x - refBR.position.x);
-  var theta = Math.atan2(dx,dy);
-
-  carAngleRadians2 = theta;
-  carAngleDegrees2 = 180 + (theta * 180/Math.PI);
-}
-*/
 
 
 
@@ -765,37 +709,18 @@ function calculateAngle2()
 
 
 
-  /*
   function checkForGoal()
-  {
-    if(ball.position.x > 1150)
-    {
-      playerOneScore++;
-      goalReset();
-      updateScoreboard();
-    }
-
-    if(ball.position.x < 100)
-    {
-      playerTwoScore++;
-      goalReset();
-      updateScoreboard();
-    }
-  }
-  */
-
-  function checkForGoal_revised()
   {
     if(Matter.Bounds.overlaps(ball.bounds, leftGoalDetector.bounds))
     {
-      //playerOneScore++;
+      playerOneScore+=1;
       goalReset();
       //updateScoreboard();
     }
 
     if(Matter.Bounds.overlaps(ball.bounds, rightGoalDetector.bounds))
     {
-      //playerTwoScore++;
+      playerTwoScore+=1;
       goalReset();
       //updateScoreboard();
     }
@@ -814,6 +739,75 @@ function calculateAngle2()
   }
 
 
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///     SPRITES
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  function drawSprite(name, width, height, source, posX, posY, rotation, centreOfRotX, centreOfRotY)
+  {
+    name = new Image();
+    name.width = width;
+    name.height = height;
+    name.src = source;
+
+    name.onload = function()
+    {
+      if(rotation != 0)
+      {
+
+          context.translate(centreOfRotX, centreOfRotY);
+          context.rotate((rotation + 180) * Math.PI / 180);
+          context.drawImage(name, -name.width/2, -name.height/2, name.width, name.height);
+          context.rotate(-(rotation + 180) * Math.PI / 180);
+          context.translate(-centreOfRotX, -centreOfRotY);
+
+      }
+      else
+      {
+        context.drawImage(name, posX, posY, name.width, name.height);
+        //console.log("drawn");
+      }
+    }
+  } // End of drawSprite()
+
+
+
+function draw()
+{
+  console
+  var picture = new Image();
+  picture.src = "assets/graphics/race_car_forwards.png";
+  picture.height = 100;
+  picture.width = 100;
+
+  picture.onload = function()
+  {
+    context.drawImage(picture,0,0,200,200,300,300,200,200);
+  }
+}
+
+
+
+    //drawSprite("carPic", 100, 40, "assets/graphics/race_car_forwards.png", car.position.x, car.position.y, carAngleDegrees, car.position.x, car.position.y);
+    //drawSprite("carPic2", 100, 40, "assets/graphics/muscle_car_backwards.png", car2.position.x, car2.position.y, carAngleDegrees2, car2.position.x, car2.position.y);
+
+    //draw();
+
+
+
+/*
+ var carPic = new Image();
+ carPic.src = "C/Users/G/Documents/GitHub/2drlassets/graphics/bricks.png";
+ carPic.width = 100;
+ carPic.height = 100;
+ context.drawImage(carPic, 100, 100);
+ */
+
+ var scoreboard = new Scoreboard();
+ scoreboard.addPoints(10);
+ var scoreboard2 = new Scoreboard();
+ scoreboard.addPoints(10);
 
 
   ////////////////////////////////////////////// MAIN lOOP
@@ -839,12 +833,14 @@ function calculateAngle2()
     */
 
 
+    scoreboard.showScore();
+    scoreboard2.showScore();
+
     calculateAngle();
     calculateAngle2();
     controls();
     controls2();
-    checkForGoal_revised();
-
+    checkForGoal();
     requestAnimationFrame(cycle);
   }
   cycle();

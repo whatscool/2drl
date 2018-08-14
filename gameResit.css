@@ -15,10 +15,10 @@
   left: 10px;
 }
 
-/*
+
 #myCanvas
 {
-   background-image:url('grid_background.png');
+   background-image:url('assets/graphics/grid_background.png');
     background-repeat:no-repeat;
     background-size:contain;
     height: 100%;
@@ -26,4 +26,3 @@
 	background-position:center;
 
 }
-*/
