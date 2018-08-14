@@ -19,10 +19,24 @@ function game ()
 
   var canvas = document.getElementById('myCanvas');
   var context = canvas.getContext("2d");
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
 
 
+  if (window.innerWidth > 950) {
+      canvas.width = 900;
+      canvas.height = 500;
+  } else {
+      canvas.width = 900;
+      canvas.height = 500;
+      // One day add a smaller version option and graphics here
+  }
+
+//Make an object from the canvas object's' coordinates in the DOM
+oCanvasCoords = canvas.getBoundingClientRect();
+
+//Work out what top margin to give canvas so it's centred (Half the total page height - Half the canvas height)
+var topmargin = (document.documentElement.clientHeight/2-(oCanvasCoords.bottom-oCanvasCoords.top)/2);
+    
+    canvas.style.marginTop = topmargin+"px";
 
   // module aliases
   var Engine = Matter.Engine,
@@ -49,10 +63,10 @@ function game ()
     {
       //width: 3000,
       //height: 550,
-      width: window.innerWidth,
-      height: window.innerHeight,
+      width: canvas.width,
+      height: canvas.height,
       wireframes: false,
-      background: "assets/graphics/grid_background.png",
+      background: "assets/graphics/grid.png",
       //background: 'transparent',
       //hasBounds: false
     }
@@ -75,9 +89,15 @@ var defaultCategory = 0x0001,
 //     BALL
 ////////////////////////////////////////////////////////////////////////////////
 
+function makeBall() {
+  console.log("makeball");
+  if (typeof ball !== 'undefined') {
+    Body.setStatic(ball, true);
+    Body.setPosition(ball, { x: 450, y: 200 });
+    setTimeout(function(){ Body.setStatic(ball, false);Body.setMass(ball,0.01);}, 1000);
 
-
-  var ball = Bodies.circle(window.innerWidth/2, window.innerHeight/2, 30,
+  } else {
+  ball = Bodies.circle(450, 200, 30,
     {
       mass: 0.001, // Used to be 0.02
       inertia: 1,
@@ -88,9 +108,11 @@ var defaultCategory = 0x0001,
       render: {sprite: {texture: "assets/graphics/ball.png", xScale: 0.36, yScale: 0.36}}
       //render: {sprite: {texture: "assets/graphics/football.png", xScale: 0.09, yScale: 0.09}}
     });
+  }
 
+}
 
-
+makeBall();
 ////////////////////////////////////////////////////////////////////////////////
 //     WALLS
 ////////////////////////////////////////////////////////////////////////////////
@@ -98,7 +120,7 @@ var defaultCategory = 0x0001,
 var offset = 1;
 var wallSize = 50;
 
-    var roof = Bodies.rectangle(window.innerWidth/2, wallSize/2, window.innerWidth, wallSize,
+    var roof = Bodies.rectangle(450,0,900,10,
       {
         isStatic: true,
         friction: 0,
@@ -106,7 +128,7 @@ var wallSize = 50;
         //restitution: 0
       });
 
-    var floor = Bodies.rectangle(window.innerWidth/2, window.innerHeight - wallSize, window.innerWidth, wallSize,
+    var floor = Bodies.rectangle(450,500,900,10,
       {
         isStatic: true,
         friction: 0,
@@ -118,14 +140,14 @@ var wallSize = 50;
         //collisionFilter: {group: 1}
       });
 
-    var rightWall = Bodies.rectangle(window.innerWidth - 60, 0, wallSize, window.innerHeight*2,
+    var rightWall = Bodies.rectangle(0,250,10,500,
     {
       isStatic: true,
       friction: 0,
       collisionFilter: {category: defaultCategory}
     });
 
-    var leftWall = Bodies.rectangle(30, 0, wallSize, window.innerHeight *2,
+    var leftWall = Bodies.rectangle(900,250,10,500,
     {
       isStatic: true,
       friction: 0,
@@ -139,7 +161,7 @@ var wallSize = 50;
 //     GOALS
 ////////////////////////////////////////////////////////////////////////////////
 
-    var leftGoalStartPoint = [leftWall.position.x + 150, 200],
+    var leftGoalStartPoint = [15, 200],
         goalHeight = 150,
         goalWidth = 50,
         barWidth = 20,
@@ -187,7 +209,7 @@ var wallSize = 50;
 
 
 
-    var rightGoalStartPoint = [rightWall.position.x - 150, 200];
+    var rightGoalStartPoint = [885, 200];
     //var testBox = Bodies.rectangle(500, 200, 20, 20,{isStatic: true});
 
 
@@ -257,7 +279,7 @@ var wallSize = 50;
 
 var carStartPoint = [200, 350],
     carWidth = 60,
-    carHeight = 3*carWidth/5, // Used to be carWidth/3
+    carHeight = 3*carWidth/8, // Used to be carWidth/3
     wheelRadius = carHeight/2,
     carVertices =
     [
@@ -321,9 +343,9 @@ const car = Body.create
 //**********************************************************************************
 // PLAYER 2
 
-var carStartPoint2 = [1000, 350],
+var carStartPoint2 = [700, 350],
     carWidth2 = 60,
-    carHeight2 = 3*carWidth/5,
+    carHeight2 = 3*carWidth/8,
     carVertices2 =
     [
       {x : carStartPoint2[0],               y : carStartPoint2[0]},
@@ -356,7 +378,7 @@ var carStartPoint2 = [1000, 350],
 
 
 
-//const car2 = Matter.Bodies.fromVertices(carStartPoint2[0], carStartPoint2[1], carVertices2, {friction: 0, mass: 100, restitution: 0, inertia: 100000});
+//const car2 = Mat299ter.Bodies.fromVertices(carStartPoint2[0], carStartPoint2[1], carVertices2, {friction: 0, mass: 100, restitution: 0, inertia: 100000});
 const refBR = Matter.Bodies.circle(car2.position.x + carWidth2/2, car2.position.y + carHeight2/2, 5);
 const refTR = Matter.Bodies.circle(car2.position.x + carWidth2/2, car2.position.y - carHeight2/2, 5);
 /*
@@ -709,26 +731,29 @@ function calculateAngle2()
 
 
 
-  function checkForGoal()
+  function checkForGoal(ball)
   {
     if(Matter.Bounds.overlaps(ball.bounds, leftGoalDetector.bounds))
     {
-      playerOneScore+=1;
-      goalReset();
-      //updateScoreboard();
+      goalReset(ball);
+      //Add one to the contents of the scoreboard div
+      document.getElementById("playerTwoScore").innerHTML = parseFloat(parseInt(document.getElementById("playerTwoScore").innerHTML) + 1);
     }
 
     if(Matter.Bounds.overlaps(ball.bounds, rightGoalDetector.bounds))
     {
       playerTwoScore+=1;
-      goalReset();
-      //updateScoreboard();
+      goalReset(ball);
+      //Add one to the contents of the scoreboard div
+      document.getElementById("playerOneScore").innerHTML = parseFloat(parseInt(document.getElementById("playerOneScore").innerHTML) + 1);
     }
   }
 
-
-  function goalReset()
+  function goalReset(ball)
   {
+    console.log("goalscored");
+    
+    makeBall(ball);
     goalSound.play();
     //car.position.x = 200;
     //car.position.y = 350;
@@ -802,15 +827,19 @@ function draw()
  carPic.width = 100;
  carPic.height = 100;
  context.drawImage(carPic, 100, 100);
- */
+ 
 
  var scoreboard = new Scoreboard();
  scoreboard.addPoints(10);
  var scoreboard2 = new Scoreboard();
  scoreboard.addPoints(10);
 
-
+*/
   ////////////////////////////////////////////// MAIN lOOP
+  
+
+
+
     function cycle()
   {
     /*
@@ -832,15 +861,15 @@ function draw()
     Body.setPosition(goals, { x: window.innerWidth/2.4, y: py });
     */
 
-
+/*
     scoreboard.showScore();
     scoreboard2.showScore();
-
+*/
     calculateAngle();
     calculateAngle2();
     controls();
     controls2();
-    checkForGoal();
+    checkForGoal(ball);
     requestAnimationFrame(cycle);
   }
   cycle();

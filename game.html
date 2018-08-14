@@ -3,37 +3,54 @@
 <meta charset="UTF-8"/>
 <head>
   <title>This is the title</title>
-</head>
-<body>
-  <div class="playerOneScore">
-    <p id="1" style="color:black; font-size:30px; "> 0 </p>
-    <style type="text/css">
-      .playerOneScore
-      {
-        width: 100px;
-        height: 100px;
-        position:absolute;
-        top: 50px;
-        right: 1000px;
-        background-color: blue;
-        opacity: 0.5;
+      <style type="text/css">
+      body {
+        font-family:Calibri, Arial,sans-serif;
+        text-align:center;
+        background-color:black;
+        background-image:url('assets/graphics/footiebg.jpg');
       }
-    </style>
-  </div>
-  <div class="playerTwoScore">
-    <p id="2" style="color:black; font-size:30px; "> 0 </p>
-    <style type="text/css">
-      .playerTwoScore
-      {
-        width: 100px;
-        height: 100px;
+      .scorebox {
+        padding:5px;
         position:absolute;
+        width: 100px;
+        text-align:center;
+        color:white;
+        font-family:Calibri, Arial,sans-serif;
+        font-size:50px;
+        opacity: 0.6;
         top: 50px;
+      }
+
+      h1 {
+        position: absolute;
+        left:30%;
+        width:40%;
+        top:45px;
+        color:white;
+        font-family:'Arial Black';
+        opacity:0.8;
+      }
+
+      #playerOneScore
+      {
+        left:200px;
+        background-color: MidnightBlue;
+      }
+      #playerTwoScore
+      {
         right:200px;
-        background-color: red;
-        opacity: 0.5;
+        background-color: Maroon;
       }
+
     </style>
+</head>
+<body><h1>Grant League</h1>
+  <div id="playerOneScore" class="scorebox">
+    0
+  </div>
+  <div id="playerTwoScore" class="scorebox">
+    0
   </div>
   <div id="div">
     <canvas id="myCanvas"></canvas>
