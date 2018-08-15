@@ -1,19 +1,17 @@
 function game ()
 {
 
-
-  var boostImg = new Image();
-  boostImg.src = "assets/graphics/boost.png";
-
-
   var canvas = document.getElementById('myCanvas');
   var context = canvas.getContext("2d");
 
 
-  if (window.innerWidth > 950) {
+  if (window.innerWidth > 950)
+  {
       canvas.width = 900;
       canvas.height = 500;
-  } else {
+  }
+  else
+  {
       canvas.width = 900;
       canvas.height = 500;
       // One day add a smaller version option and graphics here
@@ -271,7 +269,7 @@ const carBody = Matter.Bodies.fromVertices(carStartPoint[0], carStartPoint[1], c
     restitution: 0,
     inertia: 100000,
     collisionFilter: {category: defaultCategory},
-    //render: {sprite: {texture: "assets/graphics/race_car_forwards.png", xScale: 0.036, yScale: 0.036}}
+    render: {sprite: {texture: "assets/graphics/svgCar.png", xScale: 0.036, yScale: 0.036}}
   });
 const carBottomDetector = Matter.Bodies.rectangle(carStartPoint[0], carStartPoint[1] +carHeight/2, carWidth/2, 5,
   {
@@ -716,7 +714,7 @@ function drawPicture()
 		context.drawImage(pic, 200, 200);
 	}
 }
-drawPicture();
+
 
 
 
@@ -835,6 +833,7 @@ drawPicture();
 
     //draw();
 
+    drawPicture();
 
     checkSounds();
     calculateAngle();
