@@ -10,8 +10,9 @@ function game ()
       backgroundAudio = new Audio("assets/audio/arcade_music.wav"),
       jumpAudio = new Audio("assets/audio/jump.wav");
 
-  carAudio.volume = 0.1;
-  carAudio.volume = 0.1;
+      backgroundAudio.volume = 0.4;
+      carAudio.volume = 0.1;
+      goalSound.volume = 0.6;
 
   var boostImg = new Image();
   boostImg.src = "assets/graphics/boost.png";
@@ -35,7 +36,7 @@ oCanvasCoords = canvas.getBoundingClientRect();
 
 //Work out what top margin to give canvas so it's centred (Half the total page height - Half the canvas height)
 var topmargin = (document.documentElement.clientHeight/2-(oCanvasCoords.bottom-oCanvasCoords.top)/2);
-    
+
     canvas.style.marginTop = topmargin+"px";
 
   // module aliases
@@ -89,12 +90,15 @@ var defaultCategory = 0x0001,
 //     BALL
 ////////////////////////////////////////////////////////////////////////////////
 
+/*
 function makeBall() {
   console.log("makeball");
   if (typeof ball !== 'undefined') {
     Body.setStatic(ball, true);
+    //Body.setVelocity(ball,0);
     Body.setPosition(ball, { x: 450, y: 200 });
-    setTimeout(function(){ Body.setStatic(ball, false);Body.setMass(ball,0.01);}, 1000);
+    //setTimeout(function(){ Body.setStatic(ball, false);Body.setMass(ball,0.01);}, 1000);
+    setTimeout(function(){ Body.setStatic(ball, false)},1000);
 
   } else {
   ball = Bodies.circle(450, 200, 30,
@@ -111,8 +115,47 @@ function makeBall() {
   }
 
 }
-
 makeBall();
+*/
+
+
+
+
+function makeBall() {
+  console.log("makeball");
+  if (typeof ball !== 'undefined') {
+    Body.setStatic(ball, true);
+    Body.setPosition(ball, { x: 450, y: 200 });
+    //setTimeout(function(){ Body.setStatic(ball, false);Body.setMass(ball,0.01);}, 1000);
+    setTimeout(function(){ Body.setStatic(ball, false)},1000);
+    Matter.Body.set(ball, "restitution", 0.6);
+    Matter.Body.set(ball, "mass", 0.001);
+    Matter.Body.set(ball, "inertia", 1);
+    Matter.Body.set(ball, "friction", 0.05);
+    Matter.Body.set(ball, "frictionAir", 0);
+    Matter.Body.set(ball, "angularVelocity", 0);
+
+
+  } else {
+  ball = Bodies.circle(450, 200, 30,
+    {
+      mass: 0.001, // Used to be 0.02
+      inertia: 1,
+      restitution: 0.6, // Used to be around 0.95
+      friction: 0.05,
+      frictionAir: 0,
+      angularVelocity: 0,
+      collisionFilter: {category: defaultCategory},
+      render: {sprite: {texture: "assets/graphics/ball.png", xScale: 0.36, yScale: 0.36}}
+      //render: {sprite: {texture: "assets/graphics/football.png", xScale: 0.09, yScale: 0.09}}
+    });
+  }
+
+}
+makeBall();
+
+
+
 ////////////////////////////////////////////////////////////////////////////////
 //     WALLS
 ////////////////////////////////////////////////////////////////////////////////
@@ -161,7 +204,7 @@ var wallSize = 50;
 //     GOALS
 ////////////////////////////////////////////////////////////////////////////////
 
-    var leftGoalStartPoint = [15, 200],
+    var leftGoalStartPoint = [15, 350],
         goalHeight = 150,
         goalWidth = 50,
         barWidth = 20,
@@ -189,7 +232,8 @@ var wallSize = 50;
     {
       isStatic: true,
       isSensor: true,
-      collisionFilter: {category: defaultCategory}
+      collisionFilter: {category: defaultCategory},
+      render: {sprite: {texture: "assets/graphics/blue_glow.png", xScale: 2.2, yScale: 0.24}}
     });
 
     /*
@@ -209,7 +253,7 @@ var wallSize = 50;
 
 
 
-    var rightGoalStartPoint = [885, 200];
+    var rightGoalStartPoint = [885, 350];
     //var testBox = Bodies.rectangle(500, 200, 20, 20,{isStatic: true});
 
 
@@ -235,7 +279,8 @@ var wallSize = 50;
     {
       isStatic: true,
       isSensor: true,
-      collisionFilter: {category: defaultCategory}
+      collisionFilter: {category: defaultCategory},
+      render: {sprite: {texture: "assets/graphics/red_glow.png", xScale: 2.2, yScale: 0.24}}
     });
 
     /*
@@ -742,7 +787,7 @@ function calculateAngle2()
 
     if(Matter.Bounds.overlaps(ball.bounds, rightGoalDetector.bounds))
     {
-      playerTwoScore+=1;
+      //playerTwoScore+=1;
       goalReset(ball);
       //Add one to the contents of the scoreboard div
       document.getElementById("playerOneScore").innerHTML = parseFloat(parseInt(document.getElementById("playerOneScore").innerHTML) + 1);
@@ -752,18 +797,16 @@ function calculateAngle2()
   function goalReset(ball)
   {
     console.log("goalscored");
-    
+
     makeBall(ball);
     goalSound.play();
-    //car.position.x = 200;
-    //car.position.y = 350;
-    //car2.position.x = 1050;
-    //car2.position.y = 350;
-    //ball.position.x = window.innerWidth/2;
-    //ball.position.y = window.innerHeight/2;
+    Body.setPosition(car, { x: ball.position.x - 200, y: ball.position.y });
+    Body.setVelocity(car, { x:0, y:0 });
+    Body.setPosition(car2, { x: ball.position.x + 200, y: ball.position.y });
+    Body.setVelocity(car2, { x:0, y:0 });
+    Body.setAngle(car, 0);
+    Body.setAngle(car2, 0);
   }
-
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///     SPRITES
@@ -827,7 +870,7 @@ function draw()
  carPic.width = 100;
  carPic.height = 100;
  context.drawImage(carPic, 100, 100);
- 
+
 
  var scoreboard = new Scoreboard();
  scoreboard.addPoints(10);
@@ -836,35 +879,54 @@ function draw()
 
 */
   ////////////////////////////////////////////// MAIN lOOP
-  
+  function checkSounds()
+  {
+    backgroundAudio.play();
+    carAudio.play();
+
+    if(keys["75"] || keys["83"])
+    {
+      boostAudio.play();
+    }
+    else
+    {
+      boostAudio.pause();
+    }
+
+    if(onGround() || onGround2())
+    {
+      if(keys["65"] || keys["68"] || keys["74"] || keys["76"])
+      {
+        carAudio2.play();
+      }
+      else
+      {
+        carAudio2.pause();
+      }
+    }
+    else
+    {
+      carAudio2.pause();
+    }
+  }
+
 
 
 
     function cycle()
   {
-    /*
-    /// Make the goal move up and down
-    var py = 250 + 30 * Math.sin(engine.timing.timestamp * 0.002);
-    Body.setVelocity(leftGoal, { x: 0, y: py - leftGoal.position.y });
-    Body.setPosition(leftGoal, { x: 100, y: py });
-
-    var qy = 250 + 30 * Math.sin(engine.timing.timestamp * 0.002);
-    Body.setVelocity(rightGoal, { x: 0, y: qy - rightGoal.position.y });
-    Body.setPosition(rightGoal, { x: 100, y: qy });
-    */
-
-    /*
-    // BUG - This is the reason the goals won't stay in the right place.
     /// Make the goal move up and down
     var py = 250 + 30 * Math.sin(engine.timing.timestamp * 0.002);
     Body.setVelocity(goals, { x: 0, y: py - goals.position.y });
-    Body.setPosition(goals, { x: window.innerWidth/2.4, y: py });
-    */
+    Body.setPosition(goals, { x: goals.position.x, y: py });
 
-/*
-    scoreboard.showScore();
-    scoreboard2.showScore();
-*/
+    drawSprite("carPic", 100, 40, "assets/graphics/race_car_forwards.png", car.position.x, car.position.y, carAngleDegrees, car.position.x, car.position.y);
+    //drawSprite("carPic2", 100, 40, "assets/graphics/muscle_car_backwards.png", car2.position.x, car2.position.y, carAngleDegrees2, car2.position.x, car2.position.y);
+
+    //draw();
+
+
+    checkSounds();
     calculateAngle();
     calculateAngle2();
     controls();
