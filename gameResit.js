@@ -75,10 +75,6 @@ var topmargin = (document.documentElement.clientHeight/2-(oCanvasCoords.bottom-o
 
 
 
-var playerOneScore = 0,
-    playerTwoScore = 0;
-
-
 /// Collision Filter Categories
 var defaultCategory = 0x0001,
     secondCategory = 0x0002,
@@ -89,37 +85,6 @@ var defaultCategory = 0x0001,
 ////////////////////////////////////////////////////////////////////////////////
 //     BALL
 ////////////////////////////////////////////////////////////////////////////////
-
-/*
-function makeBall() {
-  console.log("makeball");
-  if (typeof ball !== 'undefined') {
-    Body.setStatic(ball, true);
-    //Body.setVelocity(ball,0);
-    Body.setPosition(ball, { x: 450, y: 200 });
-    //setTimeout(function(){ Body.setStatic(ball, false);Body.setMass(ball,0.01);}, 1000);
-    setTimeout(function(){ Body.setStatic(ball, false)},1000);
-
-  } else {
-  ball = Bodies.circle(450, 200, 30,
-    {
-      mass: 0.001, // Used to be 0.02
-      inertia: 1,
-      restitution: 0.60, // Used to be around 0.95
-      friction: 0.05,
-      frictionAir: 0,
-      collisionFilter: {category: defaultCategory},
-      render: {sprite: {texture: "assets/graphics/ball.png", xScale: 0.36, yScale: 0.36}}
-      //render: {sprite: {texture: "assets/graphics/football.png", xScale: 0.09, yScale: 0.09}}
-    });
-  }
-
-}
-makeBall();
-*/
-
-
-
 
 function makeBall() {
   console.log("makeball");
@@ -157,7 +122,7 @@ makeBall();
 
 
 ////////////////////////////////////////////////////////////////////////////////
-//     WALLS
+///     WALLS
 ////////////////////////////////////////////////////////////////////////////////
 
 var offset = 1;
@@ -204,6 +169,8 @@ var wallSize = 50;
 //     GOALS
 ////////////////////////////////////////////////////////////////////////////////
 
+
+    //// LEFT GOAL
     var leftGoalStartPoint = [15, 350],
         goalHeight = 150,
         goalWidth = 50,
@@ -236,26 +203,10 @@ var wallSize = 50;
       render: {sprite: {texture: "assets/graphics/blue_glow.png", xScale: 2.2, yScale: 0.24}}
     });
 
-    /*
-    var leftGoal = Body.create
-    ({
-      parts: [leftGoalTop, leftGoalBottom, leftGoalBack, leftGoalDetector],
-      inertia: 100000,
-      friction: 0,
-      mass: 100,
-      isStatic: true,
-      //frictionStatic: 0.5,
-      //restitution: -1,
-      //sleepThreshold: Infinity,
-      //collisionFilter: {group: -2},
-    });
-    */
 
 
-
+    //// RIGHT GOAL
     var rightGoalStartPoint = [885, 350];
-    //var testBox = Bodies.rectangle(500, 200, 20, 20,{isStatic: true});
-
 
     var rightGoalTop = Bodies.rectangle(rightGoalStartPoint[0], rightGoalStartPoint[1], goalWidth, barWidth,
     {
@@ -283,21 +234,10 @@ var wallSize = 50;
       render: {sprite: {texture: "assets/graphics/red_glow.png", xScale: 2.2, yScale: 0.24}}
     });
 
-    /*
-    var rightGoal = Body.create
-    ({
-      parts: [rightGoalTop, rightGoalBottom, rightGoalBack, rightGoalDetector],
-      inertia: 100000,
-      friction: 0,
-      mass: 100,
-      isStatic: true,
-      //frictionStatic: 0.5,
-      //restitution: -1
-      //sleepThreshold: Infinity,
-      //collisionFilter: {group: -2},
-    });
-    */
 
+
+
+    //// GROUP GOALS
     var goals = Body.create
     ({
       parts: [rightGoalTop, rightGoalBottom, rightGoalBack, rightGoalDetector, leftGoalTop, leftGoalBottom, leftGoalBack, leftGoalDetector],
@@ -322,6 +262,8 @@ var wallSize = 50;
 //     CARS
 ////////////////////////////////////////////////////////////////////////////////
 
+//// PLAYER 1
+
 var carStartPoint = [200, 350],
     carWidth = 60,
     carHeight = 3*carWidth/8, // Used to be carWidth/3
@@ -334,15 +276,21 @@ var carStartPoint = [200, 350],
       {x : carStartPoint[0] ,           y : carStartPoint[0]+carHeight}
     ];
 
-
-// TESTING A NEW COMPOUND CAR THAT IS JUST WEDGE AND DETECTOR
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const carBody = Matter.Bodies.fromVertices(carStartPoint[0], carStartPoint[1], carVertices, {friction: 0, mass: 100, restitution: 0, inertia: 100000, collisionFilter: {category: defaultCategory}});
+const carBody = Matter.Bodies.fromVertices(carStartPoint[0], carStartPoint[1], carVertices,
+  {
+    friction: 0,
+    mass: 100,
+    restitution: 0,
+    inertia: 100000,
+    collisionFilter: {category: defaultCategory},
+    //render: {sprite: {texture: "assets/graphics/race_car_forwards.png", xScale: 0.036, yScale: 0.036}}
+  });
 const carBottomDetector = Matter.Bodies.rectangle(carStartPoint[0], carStartPoint[1] +carHeight/2, carWidth/2, 5,
   {
     collisionFilter: {mask: secondCategory},
     isSensor: true
   });
+  carBottomDetector.visible = false;
 const car = Body.create
 ({
   parts: [carBody, carBottomDetector],
@@ -355,38 +303,10 @@ const car = Body.create
   //collisionFilter: {mask: defualtCategory},
 
 });
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
-
-// DON'T DELETE
-//const car = Matter.Bodies.fromVertices(carStartPoint[0], carStartPoint[1], carVertices, {friction: 0, mass: 100, restitution: 0, inertia: 100000});
-const refBL = Matter.Bodies.circle(car.position.x - carWidth/2, car.position.y + carHeight/2, 5);
-const refTL = Matter.Bodies.circle(car.position.x - carWidth/2, car.position.y - carHeight/2, 5);
-
-/*
-const carBody = Matter.Bodies.fromVertices(carStartPoint[0], carStartPoint[1], carVertices);
-const frontWheel = Matter.Bodies.circle(carBody.position.x - carWidth/3, carBody.position.y +(3*carHeight/4), wheelRadius);
-const rearWheel = Matter.Bodies.circle(carBody.position.x + carWidth/3, carBody.position.y +(3*carHeight/4), wheelRadius);
-const refBL = Matter.Bodies.circle(carBody.position.x - carWidth/2, carBody.position.y + carHeight/2, 0.01);
-const refTL = Matter.Bodies.circle(carBody.position.x - carWidth/2, carBody.position.y - carHeight/2, 0.01);
-const car = Body.create
-({
-  parts: [carBody, frontWheel, rearWheel, refBL, refTL],
-  inertia: 100000,
-  friction: 0,
-  mass: 100,
-  //frictionStatic: 0.5,
-  restitution: -1
-  //sleepThreshold: Infinity,
-  //collisionFilter: {group: -2},
-});
-*/
-
-
-//**********************************************************************************
-// PLAYER 2
+//// PLAYER 2
 
 var carStartPoint2 = [700, 350],
     carWidth2 = 60,
@@ -399,14 +319,19 @@ var carStartPoint2 = [700, 350],
       {x : carStartPoint2[0],               y : carStartPoint2[0] + carHeight2}
     ];
 
-
-    // TESTING A NEW COMPOUND CAR THAT IS JUST WEDGE AND DETECTOR
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    const carBody2 = Matter.Bodies.fromVertices(carStartPoint2[0], carStartPoint2[1], carVertices2, {friction: 0, mass: 100, restitution: 0, inertia: 100000, collisionFilter: {category: defaultCategory}});
+    const carBody2 = Matter.Bodies.fromVertices(carStartPoint2[0], carStartPoint2[1], carVertices2,
+      {
+        friction: 0,
+        mass: 100,
+        restitution: 0,
+        inertia: 100000,
+        collisionFilter: {category: defaultCategory}
+      });
     const carBottomDetector2 = Matter.Bodies.rectangle(carStartPoint2[0], carStartPoint2[1] +carHeight2/2, carWidth2/2, 5,
       {
         collisionFilter: {mask: secondCategory},
-        isSensor: true
+        isSensor: true,
+
       });
     const car2 = Body.create
     ({
@@ -420,30 +345,6 @@ var carStartPoint2 = [700, 350],
 
     });
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-//const car2 = Mat299ter.Bodies.fromVertices(carStartPoint2[0], carStartPoint2[1], carVertices2, {friction: 0, mass: 100, restitution: 0, inertia: 100000});
-const refBR = Matter.Bodies.circle(car2.position.x + carWidth2/2, car2.position.y + carHeight2/2, 5);
-const refTR = Matter.Bodies.circle(car2.position.x + carWidth2/2, car2.position.y - carHeight2/2, 5);
-/*
-const carBody2 = Matter.Bodies.fromVertices(1050, 350, [{x:200, y:200},{x:140, y:210},{x:140, y:220},{x: 200, y: 220}])
-const frontWheel2 = Matter.Bodies.circle(carBody2.position.x -20, carBody2.position.y +15, 8)
-const rearWheel2 = Matter.Bodies.circle(carBody2.position.x +20, carBody2.position.y +15, 8)
-const refBR = Matter.Bodies.circle(carBody2.position.x + carWidth2/2, carBody2.position.y + carHeight2/2, 0.01)
-const refTR = Matter.Bodies.circle(carBody2.position.x + carWidth2/2, carBody2.position.y - carHeight2/2, 0.01)
-const car2 = Body.create
-({
-  parts: [carBody2, frontWheel2, rearWheel2, refBR, refTR],
-  inertia: 100000,
-  friction: 0,
-  mass: 100,
-  //frictionStatic: 0.5,
-  restitution: -1
-  //sleepThreshold: Infinity,
-  //collisionFilter: {group: -2},
-});
-*/
 
 
 
@@ -464,16 +365,6 @@ var carOnGround = true,
     carBoostForce = 0.0008 * car.mass,
     carMaxSpeedOnGround = 7;
 
-    /*
-    var testCircle1 = Matter.Bodies.circle(340, 300, 20, {isStatic: true});
-    var testCircle2 = Matter.Bodies.circle(300, 300, 40, {isStatic: true});
-
-    //Matter.Bounds.overlaps(boundsA, boundsB)
-    console.log("Overlaps?   " + Matter.Bounds.overlaps(testCircle1.bounds, testCircle2.bounds));
-    console.log("Overlaps?   " + Matter.Bounds.overlaps(testCircle2.bounds, testCircle1.bounds));
-    */
-
-
 
 
 
@@ -481,6 +372,10 @@ var carOnGround = true,
   World.add(engine.world, [car, car2, ball, floor, roof, leftWall, rightWall, goals]);
 
 
+
+///////////////////////////////////////////////////////////////////////////////////////////
+///     CONTROLS
+///////////////////////////////////////////////////////////////////////////////////////////
 
   // Key definitions
   const KEY_W = 87;
@@ -526,7 +421,9 @@ var carOnGround = true,
   });
 
 
-/////////////////////////////// CONTROLS
+
+  ///// PLAYER 1 CONTROLS
+
 function controls()
 {
   if(onGround())
@@ -545,9 +442,7 @@ function controls()
     {
       if(car.speed < carMaxSpeedOnGround)
       {
-        //Body.applyForce( car, {x: car.position.x, y: car.position.y}, {x: 0.5, y: 0})
         Body.applyForce(car,car.position,{x:-carDriveForce,y:0});
-        //console.log("Car Speed: " + car.speed);
       }
     }
 
@@ -564,9 +459,7 @@ function controls()
     {
       if(car.speed < carMaxSpeedOnGround)
       {
-        //Body.applyForce( car, {x: car.position.x, y: car.position.y}, {x: 0.5, y: 0})
         Body.applyForce(car,car.position,{x:carDriveForce,y:0});
-        //console.log("Car Speed: " + car.speed);
       }
     }
   }
@@ -626,8 +519,7 @@ function controls()
 
 
 
-//*******************************************************************************
-// PLAYER 2 CONTROLS
+///// PLAYER 2 CONTROLS
 
 function controls2()
 {
@@ -647,9 +539,7 @@ function controls2()
     {
       if(car2.speed < carMaxSpeedOnGround)
       {
-        //Body.applyForce( car, {x: car.position.x, y: car.position.y}, {x: 0.5, y: 0})
         Body.applyForce(car2,car2.position,{x:-carDriveForce,y:0});
-        //console.log("Car Speed: " + car.speed);
       }
     }
 
@@ -666,9 +556,7 @@ function controls2()
     {
       if(car2.speed < carMaxSpeedOnGround)
       {
-        //Body.applyForce( car, {x: car.position.x, y: car.position.y}, {x: 0.5, y: 0})
         Body.applyForce(car2,car2.position,{x:carDriveForce,y:0});
-        //console.log("Car Speed: " + car.speed);
       }
     }
   }
@@ -723,7 +611,10 @@ function controls2()
 
 
 
-//*******************************************************************************
+////////////////////////////////////////////////////////////////////////////////////////
+///    CAR ON GROUND QUERY
+////////////////////////////////////////////////////////////////////////////////////////
+
 
 
 function onGround()
@@ -753,8 +644,9 @@ function onGround2()
   }
 }
 
-
-
+//////////////////////////////////////////////////////////////////////////////////////////////
+///     CAR ANGLE CALCULATION
+//////////////////////////////////////////////////////////////////////////////////////////////
 
 
 function calculateAngle()
@@ -775,6 +667,9 @@ function calculateAngle2()
 }
 
 
+//////////////////////////////////////////////////////////////////////////////////////
+///     GOAL SCORING
+//////////////////////////////////////////////////////////////////////////////////////
 
   function checkForGoal(ball)
   {
@@ -807,6 +702,10 @@ function calculateAngle2()
     Body.setAngle(car, 0);
     Body.setAngle(car2, 0);
   }
+
+
+
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///     SPRITES
@@ -864,21 +763,8 @@ function draw()
 
 
 
-/*
- var carPic = new Image();
- carPic.src = "C/Users/G/Documents/GitHub/2drlassets/graphics/bricks.png";
- carPic.width = 100;
- carPic.height = 100;
- context.drawImage(carPic, 100, 100);
 
 
- var scoreboard = new Scoreboard();
- scoreboard.addPoints(10);
- var scoreboard2 = new Scoreboard();
- scoreboard.addPoints(10);
-
-*/
-  ////////////////////////////////////////////// MAIN lOOP
   function checkSounds()
   {
     backgroundAudio.play();
@@ -912,6 +798,9 @@ function draw()
 
 
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+///     MAIN GAME LOOP
+////////////////////////////////////////////////////////////////////////////////////////////////////
 
     function cycle()
   {
@@ -920,7 +809,8 @@ function draw()
     Body.setVelocity(goals, { x: 0, y: py - goals.position.y });
     Body.setPosition(goals, { x: goals.position.x, y: py });
 
-    drawSprite("carPic", 100, 40, "assets/graphics/race_car_forwards.png", car.position.x, car.position.y, carAngleDegrees, car.position.x, car.position.y);
+
+    //drawSprite("carPic", 100, 40, "assets/graphics/race_car_forwards.png", car.position.x, car.position.y, carAngleDegrees, car.position.x, car.position.y);
     //drawSprite("carPic2", 100, 40, "assets/graphics/muscle_car_backwards.png", car2.position.x, car2.position.y, carAngleDegrees2, car2.position.x, car2.position.y);
 
     //draw();
