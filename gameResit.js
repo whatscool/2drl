@@ -1,18 +1,6 @@
-
 function game ()
 {
-// PRELOADING
 
-  let goalSound = new Audio("assets/audio/airhorn.mp3"),
-      boostAudio = new Audio("assets/audio/boost_sound.wav"),
-      carAudio = new Audio("assets/audio/car_engine.wav"),
-      carAudio2 = new Audio("assets/audio/car_engine_2.wav"),
-      backgroundAudio = new Audio("assets/audio/arcade_music.wav"),
-      jumpAudio = new Audio("assets/audio/jump.wav");
-
-      backgroundAudio.volume = 0.4;
-      carAudio.volume = 0.1;
-      goalSound.volume = 0.6;
 
   var boostImg = new Image();
   boostImg.src = "assets/graphics/boost.png";
@@ -695,12 +683,16 @@ function calculateAngle2()
 
     makeBall(ball);
     goalSound.play();
+
     Body.setPosition(car, { x: ball.position.x - 200, y: ball.position.y });
     Body.setVelocity(car, { x:0, y:0 });
+    Body.setAngle(car, 0);
+    Body.setAngularVelocity(car, 0);
+
     Body.setPosition(car2, { x: ball.position.x + 200, y: ball.position.y });
     Body.setVelocity(car2, { x:0, y:0 });
-    Body.setAngle(car, 0);
     Body.setAngle(car2, 0);
+    Body.setAngularVelocity(car2, 0);
   }
 
 
@@ -710,6 +702,28 @@ function calculateAngle2()
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///     SPRITES
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+function drawPicture()
+{
+	var pic = new Image();
+	pic.src = "assets/graphics/race_car_forwards.png";
+
+	pic.width = 100;
+	pic.height = 100;
+	pic.onload = function()
+	{
+		context.drawImage(pic, 200, 200);
+	}
+}
+drawPicture();
+
+
+
+
+
+
+
 
   function drawSprite(name, width, height, source, posX, posY, rotation, centreOfRotX, centreOfRotY)
   {
@@ -738,41 +752,45 @@ function calculateAngle2()
     }
   } // End of drawSprite()
 
-
-
-function draw()
-{
-  console
-  var picture = new Image();
-  picture.src = "assets/graphics/race_car_forwards.png";
-  picture.height = 100;
-  picture.width = 100;
-
-  picture.onload = function()
-  {
-    context.drawImage(picture,0,0,200,200,300,300,200,200);
-  }
-}
+  //drawSprite("carPic", 100, 40, "assets/graphics/race_car_forwards.png", car.position.x, car.position.y, carAngleDegrees, car.position.x, car.position.y);
+  //drawSprite("carPic2", 100, 40, "assets/graphics/muscle_car_backwards.png", car2.position.x, car2.position.y, carAngleDegrees2, car2.position.x, car2.position.y);
 
 
 
-    //drawSprite("carPic", 100, 40, "assets/graphics/race_car_forwards.png", car.position.x, car.position.y, carAngleDegrees, car.position.x, car.position.y);
-    //drawSprite("carPic2", 100, 40, "assets/graphics/muscle_car_backwards.png", car2.position.x, car2.position.y, carAngleDegrees2, car2.position.x, car2.position.y);
+/////////////////////////////////////////////////////////////////////////////////////////////
+///     AUDIO
+///////////////////////////////////////////////////////////////////////////////////////////////
 
-    //draw();
 
+  // PRELOADING AUDIO TRACKS
 
+    let goalSound = new Audio("assets/audio/airhorn.mp3"),
+        boostAudio = new Audio("assets/audio/boost_sound.wav"),
+        carAudio = new Audio("assets/audio/car_engine.wav"),
+        carAudio2 = new Audio("assets/audio/car_engine_2.wav"),
+        backgroundAudio = new Audio("assets/audio/arcade_music.wav"),
+        jumpAudio = new Audio("assets/audio/jump.wav");
+
+        backgroundAudio.volume = 0.4;
+        carAudio.volume = 0.1;
+        goalSound.volume = 0.6;
 
 
 
   function checkSounds()
   {
-    backgroundAudio.play();
-    carAudio.play();
+    backgroundAudio.play().catch(function(error) {
+    // whatever
+});;
+    carAudio.play().catch(function(error) {
+    // whatever
+});;
 
     if(keys["75"] || keys["83"])
     {
-      boostAudio.play();
+      boostAudio.play().catch(function(error) {
+    // whatever
+});;
     }
     else
     {
@@ -783,7 +801,9 @@ function draw()
     {
       if(keys["65"] || keys["68"] || keys["74"] || keys["76"])
       {
-        carAudio2.play();
+        carAudio2.play().catch(function(error) {
+    // whatever
+});;
       }
       else
       {
